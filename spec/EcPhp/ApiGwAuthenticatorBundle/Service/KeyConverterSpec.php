@@ -19,15 +19,6 @@ class KeyConverterSpec extends ObjectBehavior
             ->shouldReturn($data['pem']);
     }
 
-    public function it_can_convert_a_key_from_pem_to_jwk()
-    {
-        $data = $this->dataProvider();
-
-        $this
-            ->toJWK($data['pem'])
-            ->shouldReturn($data['jwk']);
-    }
-
     public function it_is_initializable()
     {
         $this->shouldHaveType(KeyConverter::class);

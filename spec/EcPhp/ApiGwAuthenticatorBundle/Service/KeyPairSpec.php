@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace spec\EcPhp\ApiGwAuthenticatorBundle\Service;
 
-use EcPhp\ApiGwAuthenticatorBundle\Service\KeyConverterInterface;
+use EcPhp\ApiGwAuthenticatorBundle\Service\Key;
 use EcPhp\ApiGwAuthenticatorBundle\Service\KeyPair;
 use PhpSpec\ObjectBehavior;
 
@@ -15,8 +15,8 @@ class KeyPairSpec extends ObjectBehavior
         $this->shouldHaveType(KeyPair::class);
     }
 
-    public function let(KeyConverterInterface $keyConverter)
+    public function let()
     {
-        $this->beConstructedWith($keyConverter, [], []);
+        $this->beConstructedWith(new Key(''), new Key(''));
     }
 }

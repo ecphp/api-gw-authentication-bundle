@@ -24,20 +24,43 @@ class Configuration implements ConfigurationInterface
             ->children()
             ->arrayNode('defaults')
             ->children()
-            ->scalarNode('env')->end()
+            ->scalarNode('env')
+            ->defaultValue('production')
+            ->isRequired()
+            ->cannotBeEmpty()
+            ->end()
             ->end()
             ->end()
             ->arrayNode('envs')
+            ->defaultValue($this->getDefaultEnvs())
             ->useAttributeAsKey('name')
             ->arrayPrototype()
             ->children()
             ->scalarNode('public')->end()
-            ->scalarNode('private')->end()
+            ->scalarNode('private')->defaultValue('')->end()
             ->end()
             ->end()
             ->end()
             ->end();
 
         return $treeBuilder;
+    }
+
+    private function getDefaultEnvs(): array
+    {
+        return [
+            'acceptance' => [
+                'public' => 'https://api.acceptance.tech.ec.europa.eu/federation/oauth/token/.well-known/jwks.json',
+                'private' => null,
+            ],
+            'production' => [
+                'public' => 'https://api.tech.ec.europa.eu/federation/oauth/token/.well-known/jwks.json',
+                'private' => null,
+            ],
+            'intra' => [
+                'public' => 'https://intrapi.tech.ec.europa.eu/federation/oauth/token/.well-known/jwks.json',
+                'private' => null,
+            ],
+        ];
     }
 }

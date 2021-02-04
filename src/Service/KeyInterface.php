@@ -6,7 +6,5 @@ namespace EcPhp\ApiGwAuthenticatorBundle\Service;
 
 interface KeyInterface
 {
-    public function getJWK(): array;
-
-    public function getPEM(): string;
+    public function __toString(): string;
 }

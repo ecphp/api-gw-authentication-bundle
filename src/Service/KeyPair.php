@@ -6,26 +6,23 @@ namespace EcPhp\ApiGwAuthenticatorBundle\Service;
 
 final class KeyPair implements KeyPairInterface
 {
-    private KeyConverterInterface $keyConverter;
+    private ?KeyInterface $private;
 
-    private ?array $private;
+    private KeyInterface $public;
 
-    private array $public;
-
-    public function __construct(KeyConverterInterface $keyConverter, array $public, ?array $private)
+    public function __construct(KeyInterface $public, KeyInterface $private)
     {
-        $this->keyConverter = $keyConverter;
         $this->public = $public;
         $this->private = $private;
     }
 
     public function getPrivate(): KeyInterface
     {
-        return new Key($this->keyConverter, $this->private);
+        return $this->private;
     }
 
     public function getPublic(): KeyInterface
     {
-        return new Key($this->keyConverter, $this->public);
+        return $this->public;
     }
 }

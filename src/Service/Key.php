@@ -6,23 +6,15 @@ namespace EcPhp\ApiGwAuthenticatorBundle\Service;
 
 final class Key implements KeyInterface
 {
-    private array $jwk;
+    private ?string $key;
 
-    private KeyConverterInterface $keyConverter;
-
-    public function __construct(KeyConverterInterface $keyConverter, array $jwk)
+    public function __construct(?string $key)
     {
-        $this->jwk = $jwk;
-        $this->keyConverter = $keyConverter;
+        $this->key = $key;
     }
 
-    public function getJWK(): array
+    public function __toString(): string
     {
-        return $this->jwk;
-    }
-
-    public function getPEM(): string
-    {
-        return $this->keyConverter->toPEM($this->jwk);
+        return str_replace("\r\n", "\n", (string) $this->key);
     }
 }
