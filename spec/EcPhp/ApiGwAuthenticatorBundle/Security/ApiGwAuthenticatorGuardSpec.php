@@ -24,6 +24,10 @@ class ApiGwAuthenticatorGuardSpec extends ObjectBehavior
         $request->headers = $headerBag;
 
         $headerBag
+            ->has('authorization')
+            ->willReturn(true);
+
+        $headerBag
             ->get('authorization')
             ->willReturn('Bearer token');
 

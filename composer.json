@@ -31,7 +31,8 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "spec\\EcPhp\\ApiGwAuthenticatorBundle\\": "./spec/EcPhp/ApiGwAuthenticatorBundle/"
+            "spec\\EcPhp\\ApiGwAuthenticatorBundle\\": "./spec/EcPhp/ApiGwAuthenticatorBundle/",
+            "tests\\EcPhp\\ApiGwAuthenticatorBundle\\": "./tests/src"
         }
     },
     "scripts": {
