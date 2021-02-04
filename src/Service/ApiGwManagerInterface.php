@@ -7,4 +7,6 @@ namespace EcPhp\ApiGwAuthenticatorBundle\Service;
 interface ApiGwManagerInterface
 {
     public function decode(string $jwt): array;
+
+    public function encode(string $jwt): array;
 }

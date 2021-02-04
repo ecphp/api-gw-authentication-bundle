@@ -22,8 +22,19 @@ class Configuration implements ConfigurationInterface
         /** @phpstan-ignore-next-line */
         $rootNode
             ->children()
-            ->enumNode('env')
-            ->values(['intra', 'acceptance', 'production'])
+            ->arrayNode('defaults')
+            ->children()
+            ->scalarNode('env')->end()
+            ->end()
+            ->end()
+            ->arrayNode('envs')
+            ->useAttributeAsKey('name')
+            ->arrayPrototype()
+            ->children()
+            ->scalarNode('public')->end()
+            ->scalarNode('private')->end()
+            ->end()
+            ->end()
             ->end()
             ->end();
 

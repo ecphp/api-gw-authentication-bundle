@@ -15,7 +15,9 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Guard\AbstractGuardAuthenticator;
 
-class ApiGwGuardAuthenticator extends AbstractGuardAuthenticator
+use function count;
+
+class ApiGwAuthenticatorGuard extends AbstractGuardAuthenticator
 {
     private ApiGwManagerInterface $apiGwManager;
 
@@ -37,7 +39,10 @@ class ApiGwGuardAuthenticator extends AbstractGuardAuthenticator
      */
     public function getCredentials(Request $request): array
     {
-        [,$token] = explode('Bearer ', $request->headers->get('authorization'), 2);
+        // There is no need to test this because it is only supposed to reach this
+        // method only if the ::support() method returns true.
+        // Checks are made in ::support().
+        [, $token] = explode('Bearer ', $request->headers->get('authorization'), 2);
 
         return $this->apiGwManager->decode($token);
     }
@@ -91,11 +96,13 @@ class ApiGwGuardAuthenticator extends AbstractGuardAuthenticator
      */
     public function supports(Request $request): bool
     {
-        if (null === $header = $request->headers->get('Authorization')) {
+        $header = explode('Bearer ', $request->headers->get('authorization'), 2);
+
+        if (2 !== count($header)) {
             return false;
         }
 
-        return 0 === mb_strpos($header, 'Bearer ', 0);
+        return true;
     }
 
     /**
