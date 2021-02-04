@@ -40,8 +40,8 @@ class ApiGwAuthenticatorGuard extends AbstractGuardAuthenticator
     public function getCredentials(Request $request): array
     {
         // There is no need to test this because it is only supposed to reach this
-        // method only if the ::support() method returns true.
-        // Checks are made in ::support().
+        // method only if the self::supports() method returns true.
+        // Checks are made in self::supports().
         [, $token] = explode('Bearer ', $request->headers->get('authorization'), 2);
 
         return $this->apiGwManager->decode($token);
@@ -96,6 +96,10 @@ class ApiGwAuthenticatorGuard extends AbstractGuardAuthenticator
      */
     public function supports(Request $request): bool
     {
+        if (false === $request->headers->has('authorization')) {
+            return false;
+        }
+
         $header = explode('Bearer ', $request->headers->get('authorization'), 2);
 
         if (2 !== count($header)) {
