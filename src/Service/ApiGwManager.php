@@ -8,11 +8,11 @@ use Firebase\JWT\JWT;
 
 final class ApiGwManager implements ApiGwManagerInterface
 {
-    private ApiGwKeyManager $apiGwKeyManager;
+    private ApiGwKeyManagerInterface $apiGwKeyManager;
 
     private JWT $jwt;
 
-    public function __construct(JWT $jwt, ApiGwKeyManager $apiGwKeyManager, array $configuration)
+    public function __construct(JWT $jwt, ApiGwKeyManagerInterface $apiGwKeyManager, array $configuration)
     {
         $this->jwt = $jwt;
         $this->apiGwKeyManager = $apiGwKeyManager;

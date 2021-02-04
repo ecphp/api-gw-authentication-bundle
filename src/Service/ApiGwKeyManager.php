@@ -4,26 +4,25 @@ declare(strict_types=1);
 
 namespace EcPhp\ApiGwAuthenticatorBundle\Service;
 
-use CoderCat\JWKToPEM\JWKConverter;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Throwable;
 
-final class ApiGwKeyManager
+final class ApiGwKeyManager implements ApiGwKeyManagerInterface
 {
     private HttpClientInterface $client;
 
     private array $configuration;
 
-    private JWKConverter $jwkConverter;
+    private KeyConverterInterface $keyConverter;
 
-    public function __construct(HttpClientInterface $client, JWKConverter $jwkConverter, array $configuration)
+    public function __construct(HttpClientInterface $client, KeyConverterInterface $keyConverter, array $configuration)
     {
         $this->client = $client;
-        $this->jwkConverter = $jwkConverter;
+        $this->keyConverter = $keyConverter;
         $this->configuration = $configuration;
     }
 
-    public function getKeyPair(string $env): KeyPair
+    public function getKeyPair(string $env): KeyPairInterface
     {
         // Todo: Obsolete, symfony configuration prevent empty config.
         $keyPair = $this->configuration['envs'][$env] ?? [];
@@ -45,10 +44,10 @@ final class ApiGwKeyManager
             }
         }
 
-        return new KeyPair($this->jwkConverter, ...array_values($keyPair));
+        return new KeyPair($this->keyConverter, ...array_values($keyPair));
     }
 
-    private function getFailsafeKeys(string $env): KeyPair
+    private function getFailsafeKeys(string $env): KeyPairInterface
     {
         $keyPair = [
             'public' => sprintf('%s/../Resources/keys/%s/public.jwks.json', __DIR__, $env),
@@ -68,6 +67,6 @@ final class ApiGwKeyManager
             }
         }
 
-        return new KeyPair($this->jwkConverter, ...array_values($keyPair));
+        return new KeyPair($this->keyConverter, ...array_values($keyPair));
     }
 }

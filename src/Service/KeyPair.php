@@ -4,30 +4,28 @@ declare(strict_types=1);
 
 namespace EcPhp\ApiGwAuthenticatorBundle\Service;
 
-use CoderCat\JWKToPEM\JWKConverter;
-
-final class KeyPair
+final class KeyPair implements KeyPairInterface
 {
-    private JWKConverter $jwkConverter;
+    private KeyConverterInterface $keyConverter;
 
     private ?array $private;
 
     private array $public;
 
-    public function __construct(JWKConverter $jwkConverter, array $public, ?array $private)
+    public function __construct(KeyConverterInterface $keyConverter, array $public, ?array $private)
     {
-        $this->jwkConverter = $jwkConverter;
+        $this->keyConverter = $keyConverter;
         $this->public = $public;
         $this->private = $private;
     }
 
-    public function getPrivate(): Key
+    public function getPrivate(): KeyInterface
     {
-        return new Key($this->jwkConverter, current($this->private['keys']));
+        return new Key($this->keyConverter, $this->private);
     }
 
-    public function getPublic(): Key
+    public function getPublic(): KeyInterface
     {
-        return new Key($this->jwkConverter, current($this->public['keys']));
+        return new Key($this->keyConverter, $this->public);
     }
 }

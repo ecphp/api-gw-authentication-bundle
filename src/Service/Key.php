@@ -4,18 +4,16 @@ declare(strict_types=1);
 
 namespace EcPhp\ApiGwAuthenticatorBundle\Service;
 
-use CoderCat\JWKToPEM\JWKConverter;
-
-final class Key
+final class Key implements KeyInterface
 {
     private array $jwk;
 
-    private JWKConverter $jwkConverter;
+    private KeyConverterInterface $keyConverter;
 
-    public function __construct(JWKConverter $jwkConverter, array $jwk)
+    public function __construct(KeyConverterInterface $keyConverter, array $jwk)
     {
         $this->jwk = $jwk;
-        $this->jwkConverter = $jwkConverter;
+        $this->keyConverter = $keyConverter;
     }
 
     public function getJWK(): array
@@ -25,6 +23,6 @@ final class Key
 
     public function getPEM(): string
     {
-        return $this->jwkConverter->toPEM($this->jwk);
+        return $this->keyConverter->toPEM($this->jwk);
     }
 }
