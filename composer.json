@@ -1,7 +1,7 @@
 {
     "name": "ecphp/api-gw-authenticator",
     "type": "symfony-bundle",
-    "description": "TODO",
+    "description": "An API Gateway authenticator",
     "keywords": [
         "authentication",
         "jwt",
@@ -10,7 +10,9 @@
     "license": "BSD-3-Clause",
     "require": {
         "php": ">= 7.4",
+        "codercat/jwk-to-pem": "^1.0",
         "firebase/php-jwt": "^5.2",
+        "psr/http-client": "^1.0",
         "sensio/framework-extra-bundle": "^5",
         "symfony/dependency-injection": "^5.1",
         "symfony/security-bundle": "^5.1"
@@ -22,7 +24,6 @@
         "infection/phpspec-adapter": "^0.1.2",
         "phpspec/phpspec": "^7.0"
     },
-    "suggest": {},
     "autoload": {
         "psr-4": {
             "EcPhp\\ApiGwAuthenticatorBundle\\": "src/"
