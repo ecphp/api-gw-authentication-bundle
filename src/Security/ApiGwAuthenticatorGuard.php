@@ -16,6 +16,7 @@ use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Guard\AbstractGuardAuthenticator;
+use Throwable;
 
 use function array_key_exists;
 
@@ -30,22 +31,22 @@ class ApiGwAuthenticatorGuard extends AbstractGuardAuthenticator
 
     public function checkCredentials($credentials, UserInterface $user): bool
     {
-        if (false === array_key_exists('sub', $credentials)) {
-            return false;
-        }
-
-        return $user->getUsername() === $credentials['sub'];
+        return true;
     }
 
-    public function getCredentials(Request $request): array
+    public function getCredentials(Request $request): string
     {
-        return $this->apiGwManager->decode(
-            mb_substr($request->headers->get('authorization'), 7)
-        );
+        return mb_substr($request->headers->get('authorization'), 7);
     }
 
     public function getUser($credentials, UserProviderInterface $userProvider): ?UserInterface
     {
+        try {
+            $credentials = $this->apiGwManager->decode($credentials);
+        } catch (Throwable $e) {
+            throw new AuthenticationException('Unable to load the user through the given token.');
+        }
+
         if (false === ($userProvider instanceof ApiGwAuthenticatorUserProviderInterface)) {
             throw new AuthenticationException('Unable to load the user through the given User Provider.');
         }
