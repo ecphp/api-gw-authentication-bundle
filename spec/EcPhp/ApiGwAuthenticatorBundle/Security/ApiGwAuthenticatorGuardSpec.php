@@ -79,12 +79,16 @@ class ApiGwAuthenticatorGuardSpec extends ObjectBehavior
 
     public function it_can_create_a_user_from_valid_credentials(ApiGwManagerInterface $apiGwManager, ApiGwAuthenticatorUserProviderInterface $userProvider, ApiGwAuthenticatorUserInterface $user)
     {
-        $this->beConstructedWith($apiGwManager);
-
         $username = 'foo@bar.com';
         $credentials = [
             'sub' => $username,
         ];
+
+        $apiGwManager
+            ->decode('jwt')
+            ->willReturn($credentials);
+
+        $this->beConstructedWith($apiGwManager);
 
         $userProvider
             ->loadUserByPayload($credentials)
@@ -95,7 +99,7 @@ class ApiGwAuthenticatorGuardSpec extends ObjectBehavior
             ->willReturn($username);
 
         $user = $this
-            ->getUser($credentials, $userProvider);
+            ->getUser('jwt', $userProvider);
 
         $user
             ->shouldBeAnInstanceOf(ApiGwAuthenticatorUserInterface::class);
@@ -125,7 +129,34 @@ class ApiGwAuthenticatorGuardSpec extends ObjectBehavior
 
         $this
             ->getCredentials($request)
-            ->shouldReturn($credentials);
+            ->shouldReturn('ValidToken');
+    }
+
+    public function it_can_getUser_with_a_valid_token(ApiGwAuthenticatorUserProviderInterface $userProvider, ApiGwManagerInterface $apiGwManager, Request $request, HeaderBag $headerBag, ApiGwAuthenticatorUserInterface $apiGwAuthenticatorUser)
+    {
+        $credentials = [
+            'sub' => 'valid',
+        ];
+
+        $apiGwManager
+            ->decode('ValidToken')
+            ->willReturn($credentials);
+
+        $this->beConstructedWith($apiGwManager);
+
+        $userProvider
+            ->loadUserByPayload($credentials)
+            ->willReturn($apiGwAuthenticatorUser);
+
+        $headerBag
+            ->get('authorization')
+            ->willReturn('Bearer ValidToken');
+
+        $request->headers = $headerBag;
+
+        $this
+            ->getUser('ValidToken', $userProvider)
+            ->shouldBeAnInstanceOf(ApiGwAuthenticatorUserInterface::class);
     }
 
     public function it_can_throw_if_userprovider_is_invalid(ApiGwManagerInterface $apiGwManager, InMemoryUserProvider $userProvider, ApiGwAuthenticatorUserInterface $user)
@@ -142,7 +173,7 @@ class ApiGwAuthenticatorGuardSpec extends ObjectBehavior
             ->during('getUser', [$credentials, $userProvider]);
     }
 
-    public function it_cannot_getCredentials_with_a_invalid_token(ApiGwManagerInterface $apiGwManager, Request $request, HeaderBag $headerBag)
+    public function it_cannot_getUser_with_a_invalid_token(ApiGwAuthenticatorUserProviderInterface $userProvider, ApiGwManagerInterface $apiGwManager, Request $request, HeaderBag $headerBag)
     {
         $apiGwManager
             ->decode('InvalidToken')
@@ -157,8 +188,8 @@ class ApiGwAuthenticatorGuardSpec extends ObjectBehavior
         $request->headers = $headerBag;
 
         $this
-            ->shouldThrow(ExpiredException::class)
-            ->during('getCredentials', [$request]);
+            ->shouldThrow(AuthenticationException::class)
+            ->during('getUser', [$request, $userProvider]);
     }
 
     public function let(ApiGwManagerInterface $apiGwManagerInterface)
