@@ -21,12 +21,4 @@ final class User
 
         return new JsonResponse([]);
     }
-
-    public function token(ApiGwKeyManagerInterface $apiGwKeyManager): JsonResponse
-    {
-        return new JsonResponse(
-            $apiGwKeyManager
-                ->getKeyPair('test')
-        );
-    }
 }

@@ -6,8 +6,10 @@ namespace EcPhp\ApiGwAuthenticatorBundle\Security;
 
 use EcPhp\ApiGwAuthenticatorBundle\Security\Core\User\ApiGwAuthenticatorUserProviderInterface;
 use EcPhp\ApiGwAuthenticatorBundle\Service\ApiGwManagerInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
@@ -68,6 +70,9 @@ class ApiGwAuthenticatorGuard extends AbstractGuardAuthenticator
 
     public function start(Request $request, ?AuthenticationException $authException = null)
     {
+        return new JsonResponse(['error' => 'Access denied'], 403);
+        // Todo: Should we throw here?
+        //throw new AccessDeniedHttpException('Access denied', $authException);
     }
 
     public function supports(Request $request): bool
