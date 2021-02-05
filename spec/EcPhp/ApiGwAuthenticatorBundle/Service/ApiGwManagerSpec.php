@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace spec\EcPhp\ApiGwAuthenticatorBundle\Service;
 
-use CoderCat\JWKToPEM\JWKConverter;
-use EcPhp\ApiGwAuthenticatorBundle\Service\KeyConverter;
-use EcPhp\ApiGwAuthenticatorBundle\Service\KeyConverterInterface;
+use Firebase\JWT\JWK;
 use Firebase\JWT\JWT;
 use PhpSpec\ObjectBehavior;
 use Symfony\Component\HttpClient\HttpClient;
@@ -33,7 +31,7 @@ class ApiGwManagerSpec extends ObjectBehavior
         $this->beConstructedWith(
             HttpClient::create(),
             new JWT(),
-            new KeyConverter(new JWKConverter()),
+            new JWK(),
             $configuration,
             '.'
         );
@@ -45,7 +43,7 @@ class ApiGwManagerSpec extends ObjectBehavior
             ]);
     }
 
-    public function it_can_get_public_key_from_failsafe(HttpClientInterface $httpClient, KeyConverterInterface $keyConverter)
+    public function it_can_get_public_key_from_failsafe(HttpClientInterface $httpClient)
     {
         $configuration = [
             'defaults' => [
@@ -62,7 +60,7 @@ class ApiGwManagerSpec extends ObjectBehavior
         $this->beConstructedWith(
             $httpClient,
             new JWT(),
-            $keyConverter,
+            new JWK(),
             $configuration,
             __DIR__ . '/../../../../',
         );
@@ -76,7 +74,7 @@ class ApiGwManagerSpec extends ObjectBehavior
             );
     }
 
-    public function it_can_get_public_key_from_http_call(HttpClientInterface $httpClient, KeyConverterInterface $keyConverter)
+    public function it_can_get_public_key_from_http_call(HttpClientInterface $httpClient)
     {
         $configuration = [
             'defaults' => [
@@ -93,7 +91,7 @@ class ApiGwManagerSpec extends ObjectBehavior
         $this->beConstructedWith(
             $httpClient,
             new JWT(),
-            $keyConverter,
+            new JWK(),
             $configuration,
             __DIR__ . '/../../../../'
         );

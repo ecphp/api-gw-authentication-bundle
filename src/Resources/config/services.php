@@ -4,36 +4,29 @@ declare(strict_types=1);
 
 namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
-use CoderCat\JWKToPEM\JWKConverter;
 use EcPhp\ApiGwAuthenticatorBundle\Controller\Token;
 use EcPhp\ApiGwAuthenticatorBundle\Controller\User;
 use EcPhp\ApiGwAuthenticatorBundle\Security\ApiGwAuthenticatorGuard;
+use EcPhp\ApiGwAuthenticatorBundle\Security\Auth\ApiGwAuthenticatorFailure;
+use EcPhp\ApiGwAuthenticatorBundle\Security\Auth\ApiGwAuthenticatorSuccess;
 use EcPhp\ApiGwAuthenticatorBundle\Security\Core\User\ApiGwAuthenticatorUserProvider;
 use EcPhp\ApiGwAuthenticatorBundle\Service\ApiGwManager;
 use EcPhp\ApiGwAuthenticatorBundle\Service\ApiGwManagerInterface;
-use EcPhp\ApiGwAuthenticatorBundle\Service\KeyConverter;
-use EcPhp\ApiGwAuthenticatorBundle\Service\KeyConverterInterface;
+use Firebase\JWT\JWK;
 use Firebase\JWT\JWT;
 
 return static function (ContainerConfigurator $container) {
     $container
         ->services()
-        ->set('apigwauthenticator.jwkconverter', JWKConverter::class)
+        ->set('apigwauthenticator.auth.successhandler', ApiGwAuthenticatorSuccess::class)
         ->autowire(true)
         ->autoconfigure(true);
 
     $container
         ->services()
-        ->set('apigwauthenticator.keyconverter', KeyConverter::class)
-        ->args([
-            service('apigwauthenticator.jwkconverter'),
-        ])
+        ->set('apigwauthenticator.auth.failurehandler', ApiGwAuthenticatorFailure::class)
         ->autowire(true)
         ->autoconfigure(true);
-
-    $container
-        ->services()
-        ->alias(KeyConverterInterface::class, 'apigwauthenticator.keyconverter');
 
     $container
         ->services()
@@ -41,7 +34,7 @@ return static function (ContainerConfigurator $container) {
         ->args([
             service('http_client'),
             service('apigwauthenticator.jwt'),
-            service('apigwauthenticator.keyconverter'),
+            service('apigwauthenticator.jwk'),
             '%api_gw_authenticator%',
             '%kernel.project_dir%',
         ])
@@ -67,6 +60,16 @@ return static function (ContainerConfigurator $container) {
     $container
         ->services()
         ->alias(JWT::class, 'apigwauthenticator.jwt');
+
+    $container
+        ->services()
+        ->set('apigwauthenticator.jwk', JWK::class)
+        ->autowire(true)
+        ->autoconfigure(true);
+
+    $container
+        ->services()
+        ->alias(JWK::class, 'apigwauthenticator.jwk');
 
     $container
         ->services()

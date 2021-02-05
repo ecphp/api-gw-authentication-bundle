@@ -18,8 +18,6 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Guard\AbstractGuardAuthenticator;
 use Throwable;
 
-use function array_key_exists;
-
 class ApiGwAuthenticatorGuard extends AbstractGuardAuthenticator
 {
     private ApiGwManagerInterface $apiGwManager;

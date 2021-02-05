@@ -4,27 +4,38 @@ declare(strict_types=1);
 
 namespace EcPhp\ApiGwAuthenticatorBundle\Service;
 
+use Firebase\JWT\JWK;
 use Firebase\JWT\JWT;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Throwable;
 
+/**
+ * Class ApiGwManager.
+ *
+ * phpcs:disable Generic.Files.LineLength.TooLong
+ */
 final class ApiGwManager implements ApiGwManagerInterface
 {
     private array $configuration;
 
     private HttpClientInterface $httpClient;
 
-    private JWT $jwt;
+    private JWK $jwk;
 
-    private KeyConverterInterface $keyConverter;
+    private JWT $jwt;
 
     private string $projectDir;
 
-    public function __construct(HttpClientInterface $httpClient, JWT $jwt, KeyConverterInterface $keyConverter, array $configuration, string $projectDir)
-    {
-        $this->jwt = $jwt;
+    public function __construct(
+        HttpClientInterface $httpClient,
+        JWT $jwt,
+        JWK $jwk,
+        array $configuration,
+        string $projectDir
+    ) {
         $this->httpClient = $httpClient;
-        $this->keyConverter = $keyConverter;
+        $this->jwt = $jwt;
+        $this->jwk = $jwk;
         $this->configuration = $configuration;
         $this->projectDir = $projectDir;
     }
@@ -73,9 +84,9 @@ final class ApiGwManager implements ApiGwManagerInterface
             }
 
             try {
-                $key = $this->httpClient->request('GET', $source)->toArray();
+                $keys = $this->httpClient->request('GET', $source)->toArray();
 
-                $keyPair[$type] = $this->keyConverter->toPEM(current($key['keys']));
+                $keyPair[$type] = openssl_pkey_get_details(current($this->jwk->parseKeySet($keys)))['key'];
             } catch (Throwable $e) {
                 $keyPair[$type] = (string) $failsafeKeyPair->getPublic();
             }
