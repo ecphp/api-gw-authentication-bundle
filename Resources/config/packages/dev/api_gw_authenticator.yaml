@@ -6,13 +6,3 @@ security:
 api_gw_authenticator:
     defaults:
         env: acceptance
-    envs:
-        acceptance:
-            public: https://api.acceptance.tech.ec.europa.eu/federation/oauth/token/.well-known/jwks.json
-            private: ~
-        prod:
-            public: https://api.tech.ec.europa.eu/federation/oauth/token/.well-known/jwks.json
-            private: ~
-        intra:
-            public: https://intrapi.tech.ec.europa.eu/federation/oauth/token/.well-known/jwks.json
-            private: ~

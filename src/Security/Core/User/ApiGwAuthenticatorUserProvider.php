@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace EcPhp\ApiGwAuthenticatorBundle\Security\Core\User;
 
+use Lexik\Bundle\JWTAuthenticationBundle\Security\User\PayloadAwareUserProviderInterface;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 use function get_class;
 
-final class ApiGwAuthenticatorUserProvider implements ApiGwAuthenticatorUserProviderInterface
+final class ApiGwAuthenticatorUserProvider implements PayloadAwareUserProviderInterface
 {
     /**
      * {@inheritdoc}
@@ -25,6 +26,11 @@ final class ApiGwAuthenticatorUserProvider implements ApiGwAuthenticatorUserProv
     public function loadUserByUsername(string $username): UserInterface
     {
         throw new UnsupportedUserException(sprintf('Username "%s" does not exist.', $username));
+    }
+
+    public function loadUserByUsernameAndPayload($username, array $payload)
+    {
+        return $this->loadUserByPayload($payload);
     }
 
     /**

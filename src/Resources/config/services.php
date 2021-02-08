@@ -4,76 +4,46 @@ declare(strict_types=1);
 
 namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
+use CoderCat\JWKToPEM\JWKConverter;
 use EcPhp\ApiGwAuthenticatorBundle\Controller\Token;
 use EcPhp\ApiGwAuthenticatorBundle\Controller\User;
-use EcPhp\ApiGwAuthenticatorBundle\Security\ApiGwAuthenticatorGuard;
-use EcPhp\ApiGwAuthenticatorBundle\Security\Auth\ApiGwAuthenticatorFailure;
-use EcPhp\ApiGwAuthenticatorBundle\Security\Auth\ApiGwAuthenticatorSuccess;
 use EcPhp\ApiGwAuthenticatorBundle\Security\Core\User\ApiGwAuthenticatorUserProvider;
-use EcPhp\ApiGwAuthenticatorBundle\Service\ApiGwManager;
-use EcPhp\ApiGwAuthenticatorBundle\Service\ApiGwManagerInterface;
-use Firebase\JWT\JWK;
-use Firebase\JWT\JWT;
+use EcPhp\ApiGwAuthenticatorBundle\Service\KeyConverter\KeyConverter;
+use EcPhp\ApiGwAuthenticatorBundle\Service\KeyConverter\KeyConverterInterface;
+use EcPhp\ApiGwAuthenticatorBundle\Service\Keyloader\ApiGwKeyLoader;
 
 return static function (ContainerConfigurator $container) {
     $container
         ->services()
-        ->set('apigwauthenticator.auth.successhandler', ApiGwAuthenticatorSuccess::class)
+        ->set('apigwauthenticator.key_converter.jwk_converter', JWKConverter::class)
         ->autowire(true)
         ->autoconfigure(true);
 
     $container
         ->services()
-        ->set('apigwauthenticator.auth.failurehandler', ApiGwAuthenticatorFailure::class)
+        ->set('apigwauthenticator.key_converter', KeyConverter::class)
+        ->arg('$jwkConverter', service('apigwauthenticator.key_converter.jwk_converter'))
         ->autowire(true)
         ->autoconfigure(true);
 
     $container
         ->services()
-        ->set('apigwauthenticator.manager', ApiGwManager::class)
-        ->args([
-            service('http_client'),
-            service('apigwauthenticator.jwt'),
-            service('apigwauthenticator.jwk'),
-            '%api_gw_authenticator%',
-            '%kernel.project_dir%',
-        ])
-        ->autowire(true)
-        ->autoconfigure(true);
+        ->alias(
+            KeyConverterInterface::class,
+            'apigwauthenticator.key_converter'
+        );
 
     $container
         ->services()
-        ->alias(ApiGwManagerInterface::class, 'apigwauthenticator.manager');
+        ->set('apigwauthenticator.api_gw_keyloader', ApiGwKeyLoader::class)
+        ->decorate('lexik_jwt_authentication.key_loader.raw')
+        ->arg('$configuration', '%api_gw_authenticator%')
+        ->autowire(true)
+        ->autoconfigure(true);
 
     $container
         ->services()
         ->set('apigwauthenticator.userprovider', ApiGwAuthenticatorUserProvider::class)
-        ->autowire(true)
-        ->autoconfigure(true);
-
-    $container
-        ->services()
-        ->set('apigwauthenticator.jwt', JWT::class)
-        ->autowire(true)
-        ->autoconfigure(true);
-
-    $container
-        ->services()
-        ->alias(JWT::class, 'apigwauthenticator.jwt');
-
-    $container
-        ->services()
-        ->set('apigwauthenticator.jwk', JWK::class)
-        ->autowire(true)
-        ->autoconfigure(true);
-
-    $container
-        ->services()
-        ->alias(JWK::class, 'apigwauthenticator.jwk');
-
-    $container
-        ->services()
-        ->set('apigwauthenticator.guardauthenticator', ApiGwAuthenticatorGuard::class)
         ->autowire(true)
         ->autoconfigure(true);
 

@@ -10,11 +10,11 @@
     "license": "BSD-3-Clause",
     "require": {
         "php": ">= 7.4",
-        "firebase/php-jwt": "^5.2",
-        "symfony/http-client": "^5.1",
+        "codercat/jwk-to-pem": "^1",
+        "lexik/jwt-authentication-bundle": "^2.10",
         "sensio/framework-extra-bundle": "^5",
         "symfony/dependency-injection": "^5.1",
-        "symfony/security-bundle": "^5.1"
+        "symfony/http-client": "^5.1"
     },
     "require-dev": {
         "drupol/php-conventions": "^3",
