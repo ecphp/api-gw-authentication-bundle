@@ -17,6 +17,15 @@ The features it provides are:
 - Has a failsafe mechanism for public key retrieval and embed the public keys of the default API Gateway in case of failure,
 - Provides a default UserProvider service and User entity,
 
+## Todo
+
+2 patches needs to be committed to [lexik/jwt-authentication-bundle][http lexik/jwt-authentication-bundle]:
+
+- [#832](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/832)
+- [#833](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/833)
+
+Those patches will be useful for a better use of the decoration design pattern and tests.
+
 ## API Gateway
 
 The European Commission API Gateway service allows you to deploy microservices as APIs behind the Gateway.
