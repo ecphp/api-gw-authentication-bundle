@@ -4,9 +4,8 @@ declare(strict_types=1);
 
 namespace EcPhp\ApiGwAuthenticatorBundle\Security\Core\User;
 
-use Symfony\Component\Security\Core\User\UserProviderInterface;
+use Lexik\Bundle\JWTAuthenticationBundle\Security\User\PayloadAwareUserProviderInterface;
 
-interface ApiGwAuthenticatorUserProviderInterface extends UserProviderInterface
+interface ApiGwAuthenticatorUserProviderInterface extends PayloadAwareUserProviderInterface
 {
-    public function loadUserByPayload(array $data): ApiGwAuthenticatorUserInterface;
 }

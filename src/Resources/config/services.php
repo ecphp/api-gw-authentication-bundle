@@ -10,7 +10,7 @@ use EcPhp\ApiGwAuthenticatorBundle\Controller\User;
 use EcPhp\ApiGwAuthenticatorBundle\Security\Core\User\ApiGwAuthenticatorUserProvider;
 use EcPhp\ApiGwAuthenticatorBundle\Service\KeyConverter\KeyConverter;
 use EcPhp\ApiGwAuthenticatorBundle\Service\KeyConverter\KeyConverterInterface;
-use EcPhp\ApiGwAuthenticatorBundle\Service\Keyloader\ApiGwKeyLoader;
+use EcPhp\ApiGwAuthenticatorBundle\Service\KeyLoader\ApiGwKeyLoader;
 
 return static function (ContainerConfigurator $container) {
     $container
@@ -38,6 +38,7 @@ return static function (ContainerConfigurator $container) {
         ->set('apigwauthenticator.api_gw_keyloader', ApiGwKeyLoader::class)
         ->decorate('lexik_jwt_authentication.key_loader.raw')
         ->arg('$configuration', '%api_gw_authenticator%')
+        ->arg('$projectDir', '%kernel.project_dir%')
         ->autowire(true)
         ->autoconfigure(true);
 

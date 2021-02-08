@@ -6,18 +6,21 @@ namespace EcPhp\ApiGwAuthenticatorBundle\Security\Core\User;
 
 final class ApiGwAuthenticatorUser implements ApiGwAuthenticatorUserInterface
 {
+    public string $sub;
+
     /**
      * The user storage.
      *
      * @var array<mixed>
      */
-    private $storage;
+    private array $storage;
 
     /**
      * @param array<mixed> $data
      */
-    public function __construct(array $data)
+    public function __construct(string $username, array $data)
     {
+        $this->sub = $username;
         $this->storage = $data;
     }
 
@@ -81,7 +84,7 @@ final class ApiGwAuthenticatorUser implements ApiGwAuthenticatorUserInterface
      */
     public function getUsername(): string
     {
-        return $this->get('sub');
+        return $this->sub;
     }
 
     /**

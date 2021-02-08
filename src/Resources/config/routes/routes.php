@@ -14,7 +14,4 @@ return static function (RoutingConfigurator $routes) {
     $routes
         ->add('api_gw_authenticator_bundle_token', '/token')
         ->controller(Token::class);
-
-    $routes
-        ->add('api_gw_authenticator_bundle_login_check', '/login_check');
 };
