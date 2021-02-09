@@ -13,8 +13,8 @@
         "codercat/jwk-to-pem": "^1",
         "lexik/jwt-authentication-bundle": "^2.10",
         "sensio/framework-extra-bundle": "^6",
-        "symfony/dependency-injection": "^5.1",
-        "symfony/http-client": "^5.1"
+        "symfony/dependency-injection": "^5.2",
+        "symfony/http-client": "^5.2"
     },
     "require-dev": {
         "drupol/php-conventions": "^3.0.2",
