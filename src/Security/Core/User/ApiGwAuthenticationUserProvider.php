@@ -2,19 +2,19 @@
 
 declare(strict_types=1);
 
-namespace EcPhp\ApiGwAuthenticatorBundle\Security\Core\User;
+namespace EcPhp\ApiGwAuthenticationBundle\Security\Core\User;
 
 use Lexik\Bundle\JWTAuthenticationBundle\Security\User\JWTUserProvider;
 use Lexik\Bundle\JWTAuthenticationBundle\Security\User\PayloadAwareUserProviderInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
-final class ApiGwAuthenticatorUserProvider implements PayloadAwareUserProviderInterface
+final class ApiGwAuthenticationUserProvider implements PayloadAwareUserProviderInterface
 {
     private PayloadAwareUserProviderInterface $userProvider;
 
     public function __construct()
     {
-        $this->userProvider = new JWTUserProvider(ApiGwAuthenticatorUser::class);
+        $this->userProvider = new JWTUserProvider(ApiGwAuthenticationUser::class);
     }
 
     public function loadUserByUsername(string $username): UserInterface

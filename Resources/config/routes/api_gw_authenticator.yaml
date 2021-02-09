@@ -1,3 +1,0 @@
-api_gw_authenticator_bundle:
-    resource: '@ApiGwAuthenticatorBundle/Resources/config/routes/routes.php'
-    prefix: /api

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace EcPhp\ApiGwAuthenticatorBundle\Security\Core\User;
+namespace EcPhp\ApiGwAuthenticationBundle\Security\Core\User;
 
-final class ApiGwAuthenticatorUser implements ApiGwAuthenticatorUserInterface
+final class ApiGwAuthenticationUser implements ApiGwAuthenticationUserInterface
 {
     public string $sub;
 

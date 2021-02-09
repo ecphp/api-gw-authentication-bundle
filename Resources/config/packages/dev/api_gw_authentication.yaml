@@ -1,8 +1,8 @@
-api_gw_authenticator:
+api_gw_authentication:
     defaults:
         env: acceptance # Available values are: acceptance, intra, production
 
 security:
     providers:
-        apigwauthenticator:
-            id: apigwauthenticator.userprovider
+        api_gw_authentication:
+            id: api_gw_authentication.user_provider

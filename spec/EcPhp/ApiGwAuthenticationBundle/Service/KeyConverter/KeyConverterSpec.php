@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace spec\EcPhp\ApiGwAuthenticatorBundle\Service\KeyConverter;
+namespace spec\EcPhp\ApiGwAuthenticationBundle\Service\KeyConverter;
 
 use CoderCat\JWKToPEM\JWKConverter;
-use EcPhp\ApiGwAuthenticatorBundle\Service\KeyConverter\KeyConverter;
+use EcPhp\ApiGwAuthenticationBundle\Service\KeyConverter\KeyConverter;
 use PhpSpec\ObjectBehavior;
 
 class KeyConverterSpec extends ObjectBehavior

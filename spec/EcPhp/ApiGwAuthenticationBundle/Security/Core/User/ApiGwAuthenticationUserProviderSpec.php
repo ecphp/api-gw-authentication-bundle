@@ -2,27 +2,27 @@
 
 declare(strict_types=1);
 
-namespace spec\EcPhp\ApiGwAuthenticatorBundle\Security\Core\User;
+namespace spec\EcPhp\ApiGwAuthenticationBundle\Security\Core\User;
 
-use EcPhp\ApiGwAuthenticatorBundle\Security\Core\User\ApiGwAuthenticatorUser;
-use EcPhp\ApiGwAuthenticatorBundle\Security\Core\User\ApiGwAuthenticatorUserInterface;
-use EcPhp\ApiGwAuthenticatorBundle\Security\Core\User\ApiGwAuthenticatorUserProvider;
+use EcPhp\ApiGwAuthenticationBundle\Security\Core\User\ApiGwAuthenticationUser;
+use EcPhp\ApiGwAuthenticationBundle\Security\Core\User\ApiGwAuthenticationUserInterface;
+use EcPhp\ApiGwAuthenticationBundle\Security\Core\User\ApiGwAuthenticationUserProvider;
 use PhpSpec\ObjectBehavior;
 use Symfony\Component\Security\Core\User\User;
 
-class ApiGwAuthenticatorUserProviderSpec extends ObjectBehavior
+class ApiGwAuthenticationUserProviderSpec extends ObjectBehavior
 {
     public function it_can_check_if_it_is_possible_to_load_a_user_by_username()
     {
         $this
             ->loadUserByUsername('foo')
-            ->shouldReturnAnInstanceOf(ApiGwAuthenticatorUserInterface::class);
+            ->shouldReturnAnInstanceOf(ApiGwAuthenticationUserInterface::class);
     }
 
     public function it_can_check_if_the_user_class_is_supported()
     {
         $this
-            ->supportsClass(ApiGwAuthenticatorUser::class)
+            ->supportsClass(ApiGwAuthenticationUser::class)
             ->shouldReturn(true);
 
         $this
@@ -34,12 +34,12 @@ class ApiGwAuthenticatorUserProviderSpec extends ObjectBehavior
     {
         $this
             ->loadUserByUsernameAndPayload('foo', ['sub', 'sub'])
-            ->shouldReturnAnInstanceOf(ApiGwAuthenticatorUserInterface::class);
+            ->shouldReturnAnInstanceOf(ApiGwAuthenticationUserInterface::class);
     }
 
     public function it_can_refresh_the_user()
     {
-        $user = new ApiGwAuthenticatorUser(uniqid());
+        $user = new ApiGwAuthenticationUser(uniqid());
 
         $this
             ->refreshUser($user)
@@ -54,6 +54,6 @@ class ApiGwAuthenticatorUserProviderSpec extends ObjectBehavior
 
     public function it_is_initializable()
     {
-        $this->shouldHaveType(ApiGwAuthenticatorUserProvider::class);
+        $this->shouldHaveType(ApiGwAuthenticationUserProvider::class);
     }
 }

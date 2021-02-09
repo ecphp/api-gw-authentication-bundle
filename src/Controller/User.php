@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace EcPhp\ApiGwAuthenticatorBundle\Controller;
+namespace EcPhp\ApiGwAuthenticationBundle\Controller;
 
-use EcPhp\ApiGwAuthenticatorBundle\Security\Core\User\ApiGwAuthenticatorUserInterface;
+use EcPhp\ApiGwAuthenticationBundle\Security\Core\User\ApiGwAuthenticationUserInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Security\Core\Security;
@@ -15,7 +15,7 @@ final class User
     {
         $user = $security->getUser();
 
-        if ($user instanceof ApiGwAuthenticatorUserInterface) {
+        if ($user instanceof ApiGwAuthenticationUserInterface) {
             return new JsonResponse($user->getAttributes());
         }
 

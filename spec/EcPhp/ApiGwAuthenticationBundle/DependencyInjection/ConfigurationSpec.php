@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace spec\EcPhp\ApiGwAuthenticatorBundle\DependencyInjection;
+namespace spec\EcPhp\ApiGwAuthenticationBundle\DependencyInjection;
 
-use EcPhp\ApiGwAuthenticatorBundle\DependencyInjection\Configuration;
+use EcPhp\ApiGwAuthenticationBundle\DependencyInjection\Configuration;
 use PhpSpec\ObjectBehavior;
 use Symfony\Component\Config\Definition\Builder\NodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace EcPhp\ApiGwAuthenticatorBundle\Service\KeyConverter;
+namespace EcPhp\ApiGwAuthenticationBundle\Service\KeyConverter;
 
 use CoderCat\JWKToPEM\JWKConverter;
 
