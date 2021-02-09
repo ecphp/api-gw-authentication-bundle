@@ -222,6 +222,53 @@ class ApiGwKeyLoaderSpec extends ObjectBehavior
         $this->shouldHaveType(ApiGwKeyLoader::class);
     }
 
+    public function it_make_sure_that_official_keys_cannot_be_overriden(HttpClientInterface $httpClient, KeyConverterInterface $keyConverter, ResponseInterface $response)
+    {
+        $configuration = [
+            'defaults' => [
+                'env' => 'production',
+            ],
+            'envs' => [
+                'user' => [
+                    KeyLoaderInterface::TYPE_PUBLIC => __DIR__ . '/../../../../../tests/src/Resources/keys/user/public.key',
+                    KeyLoaderInterface::TYPE_PRIVATE => __DIR__ . '/../../../../../tests/src/Resources/keys/user/private.key',
+                ],
+            ],
+        ];
+
+        $projectDir = __DIR__;
+
+        $response
+            ->getStatusCode()
+            ->willReturn(200);
+
+        $jwksArray = json_decode(file_get_contents(__DIR__ . '/../../../../../src/Resources/keys/production/jwks.json'), true);
+        $response
+            ->toArray()
+            ->willReturn($jwksArray);
+
+        $httpClient
+            ->request('GET', 'https://api.tech.ec.europa.eu/federation/oauth/token/.well-known/jwks.json')
+            ->willReturn($response);
+
+        $key = file_get_contents(__DIR__ . '/../../../../../src/Resources/keys/production/public.key');
+        $keyConverter
+            ->fromJWKStoPEMS($jwksArray['keys'])
+            ->willReturn([
+                $key,
+            ]);
+
+        $this->beConstructedWith($httpClient, $keyConverter, $projectDir, $configuration);
+
+        $this
+            ->getPublicKey()
+            ->shouldReturn('https://api.tech.ec.europa.eu/federation/oauth/token/.well-known/jwks.json');
+
+        $this
+            ->loadKey(KeyLoaderInterface::TYPE_PUBLIC)
+            ->shouldReturn($key);
+    }
+
     public function let(HttpClientInterface $httpClient, KeyConverterInterface $keyConverter)
     {
         $configuration = [
