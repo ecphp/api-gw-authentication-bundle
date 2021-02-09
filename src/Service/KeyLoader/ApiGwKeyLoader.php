@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace EcPhp\ApiGwAuthenticationBundle\Service\KeyLoader;
 
 use EcPhp\ApiGwAuthenticationBundle\Service\KeyConverter\KeyConverterInterface;
-use Lexik\Bundle\JWTAuthenticationBundle\Services\KeyLoader\KeyLoaderInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\KeyLoader\RawKeyLoader;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
@@ -127,7 +126,7 @@ final class ApiGwKeyLoader implements KeyLoaderInterface
             ];
         }
 
-        foreach (array_merge($envs, self::$mapping) as $mapping) {
+        foreach (array_merge(self::$mapping, $envs) as $mapping) {
             if ($mapping['env'] === $env) {
                 return $mapping;
             }

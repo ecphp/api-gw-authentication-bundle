@@ -6,7 +6,6 @@ namespace EcPhp\ApiGwAuthenticationBundle\Service\KeyLoader;
 
 use EcPhp\ApiGwAuthenticationBundle\Service\KeyConverter\KeyConverterInterface;
 use Exception;
-use Lexik\Bundle\JWTAuthenticationBundle\Services\KeyLoader\KeyLoaderInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
