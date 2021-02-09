@@ -4,9 +4,7 @@ A bundle for PHP >= 7.4 and Symfony 5.
 
 This bundle provides the necessary to authenticate a request based on a specific HTTP header.
 
-It has been written specifically to authenticate requests from [API Gateway][http wso2 documentation].
-
-However, its use is not limited to API Gateway and can be used to authenticate from any other services too, as long as they use the `Authorization` header.
+It has been written to facilitate the authentication of requests from [API Gateway][http wso2 documentation].
 
 This bundle relies on [lexik/jwt-authentication-bundle][http lexik/jwt-authentication-bundle]
 and provide a specific KeyLoader.
@@ -15,16 +13,14 @@ The features it provides are:
 
 - Provides default configuration to work with API Gateway,
 - Has a failsafe mechanism for public key retrieval and embed the public keys of the default API Gateway in case of failure,
-- Provides a default UserProvider service and User entity,
+- Provides a default `UserProvider` service and `User` entity,
 
-## Todo
+## To follow
 
-2 patches needs to be committed to [lexik/jwt-authentication-bundle][http lexik/jwt-authentication-bundle]:
+2 patches needs to be committed in [lexik/jwt-authentication-bundle][http lexik/jwt-authentication-bundle]:
 
 - [#832](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/832)
 - [#833](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/833)
-
-Those patches will be useful for a better use of the decoration design pattern and tests.
 
 ## API Gateway
 
@@ -58,6 +54,19 @@ This service is based on the open source project [WSO2 API Gateway][http wso2 we
 - `composer require ecphp/api-gw-authenticator:dev-master`
 
 - Copy all the files from `vendor/ecphp/api-gw-authenticator/Resources/config/packages/dev/` inside your application `config` folder environment (`dev`, `test` or `prod`).
+
+- Configure the API Gateway environment accordingly in the configuration file `api_gw_authenticator.yaml`:
+
+```yaml
+api_gw_authenticator:
+    defaults:
+        env: acceptance # Available values are: acceptance, intra, production
+
+security:
+    providers:
+        apigwauthenticator:
+            id: apigwauthenticator.userprovider
+```
 
 - Copy the file `vendor/ecphp/api-gw-authenticator/Resources/config/routes/api_gw_authenticator.yaml` inside your Symfony `routes` folder (`dev`, `test` or `prod`). For security reasons, it's better to only enable those routes on the `dev` environment.
 
