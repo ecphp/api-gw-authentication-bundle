@@ -64,17 +64,17 @@ final class ApiGwKeyLoader implements KeyLoaderInterface
 
     public function getPassphrase()
     {
-        return null;
+        return '';
     }
 
     public function getPublicKey()
     {
-        return $this->environment[KeyLoaderInterface::TYPE_PUBLIC];
+        return (string) $this->environment[KeyLoaderInterface::TYPE_PUBLIC];
     }
 
     public function getSigningKey()
     {
-        return $this->environment[KeyLoaderInterface::TYPE_PRIVATE];
+        return (string) $this->environment[KeyLoaderInterface::TYPE_PRIVATE];
     }
 
     public function loadKey($type)
@@ -116,8 +116,8 @@ final class ApiGwKeyLoader implements KeyLoaderInterface
                 KeyLoaderInterface::TYPE_PUBLIC => $data[KeyLoaderInterface::TYPE_PUBLIC],
                 KeyLoaderInterface::TYPE_PRIVATE => $data[KeyLoaderInterface::TYPE_PRIVATE],
                 'failsafe' => [
-                    KeyLoaderInterface::TYPE_PUBLIC => $data[KeyLoaderInterface::TYPE_PUBLIC],
-                    KeyLoaderInterface::TYPE_PRIVATE => $data[KeyLoaderInterface::TYPE_PRIVATE],
+                    KeyLoaderInterface::TYPE_PUBLIC => $data['failsafe'][KeyLoaderInterface::TYPE_PUBLIC] ?? $data[KeyLoaderInterface::TYPE_PUBLIC],
+                    KeyLoaderInterface::TYPE_PRIVATE => $data['failsafe'][KeyLoaderInterface::TYPE_PRIVATE] ?? $data[KeyLoaderInterface::TYPE_PRIVATE],
                 ],
             ];
         }

@@ -27,17 +27,17 @@ final class JWKSKeyLoader implements KeyLoaderInterface
 
     public function getPassphrase()
     {
-        return $this->keyLoader->getPassphrase();
+        return (string) $this->keyLoader->getPassphrase();
     }
 
     public function getPublicKey()
     {
-        return $this->keyLoader->getPublicKey();
+        return (string) $this->keyLoader->getPublicKey();
     }
 
     public function getSigningKey()
     {
-        return $this->keyLoader->getSigningKey();
+        return (string) $this->keyLoader->getSigningKey();
     }
 
     public function loadKey($type)
