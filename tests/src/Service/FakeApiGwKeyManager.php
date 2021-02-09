@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace tests\EcPhp\ApiGwAuthenticatorBundle\Service;
+namespace tests\EcPhp\ApiGwAuthenticationBundle\Service;
 
-use EcPhp\ApiGwAuthenticatorBundle\Service\ApiGwKeyManagerInterface;
-use EcPhp\ApiGwAuthenticatorBundle\Service\KeyConverterInterface;
-use EcPhp\ApiGwAuthenticatorBundle\Service\KeyPair;
+use EcPhp\ApiGwAuthenticationBundle\Service\ApiGwKeyManagerInterface;
+use EcPhp\ApiGwAuthenticationBundle\Service\KeyConverterInterface;
+use EcPhp\ApiGwAuthenticationBundle\Service\KeyPair;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 final class FakeApiGwKeyManager implements ApiGwKeyManagerInterface

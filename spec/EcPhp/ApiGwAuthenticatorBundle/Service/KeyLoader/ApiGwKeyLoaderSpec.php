@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace spec\EcPhp\ApiGwAuthenticatorBundle\Service\KeyLoader;
+namespace spec\EcPhp\ApiGwAuthenticationBundle\Service\KeyLoader;
 
-use EcPhp\ApiGwAuthenticatorBundle\Service\KeyConverter\KeyConverterInterface;
-use EcPhp\ApiGwAuthenticatorBundle\Service\KeyLoader\ApiGwKeyLoader;
+use EcPhp\ApiGwAuthenticationBundle\Service\KeyConverter\KeyConverterInterface;
+use EcPhp\ApiGwAuthenticationBundle\Service\KeyLoader\ApiGwKeyLoader;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\KeyLoader\KeyLoaderInterface;
 use PhpSpec\ObjectBehavior;
 use Symfony\Contracts\HttpClient\HttpClientInterface;

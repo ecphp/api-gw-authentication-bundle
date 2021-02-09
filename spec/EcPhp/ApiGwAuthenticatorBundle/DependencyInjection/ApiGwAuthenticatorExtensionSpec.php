@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace spec\EcPhp\ApiGwAuthenticatorBundle\DependencyInjection;
+namespace spec\EcPhp\ApiGwAuthenticationBundle\DependencyInjection;
 
-use EcPhp\ApiGwAuthenticatorBundle\DependencyInjection\ApiGwAuthenticatorExtension;
+use EcPhp\ApiGwAuthenticationBundle\DependencyInjection\ApiGwAuthenticationExtension;
 use PhpSpec\ObjectBehavior;
 
-class ApiGwAuthenticatorExtensionSpec extends ObjectBehavior
+class ApiGwAuthenticationExtensionSpec extends ObjectBehavior
 {
     public function it_is_initializable()
     {
-        $this->shouldHaveType(ApiGwAuthenticatorExtension::class);
+        $this->shouldHaveType(ApiGwAuthenticationExtension::class);
     }
 }

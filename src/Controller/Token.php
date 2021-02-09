@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace EcPhp\ApiGwAuthenticatorBundle\Controller;
+namespace EcPhp\ApiGwAuthenticationBundle\Controller;
 
-use EcPhp\ApiGwAuthenticatorBundle\Security\Core\User\ApiGwAuthenticatorUser;
+use EcPhp\ApiGwAuthenticationBundle\Security\Core\User\ApiGwAuthenticationUser;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
@@ -22,7 +22,7 @@ final class Token
             'foo' => 'bar',
         ];
 
-        $user = new ApiGwAuthenticatorUser($username);
+        $user = new ApiGwAuthenticationUser($username);
 
         return new JsonResponse(
             [

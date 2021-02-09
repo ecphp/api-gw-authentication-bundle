@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace EcPhp\ApiGwAuthenticatorBundle\Service\KeyLoader;
+namespace EcPhp\ApiGwAuthenticationBundle\Service\KeyLoader;
 
-use EcPhp\ApiGwAuthenticatorBundle\Service\KeyConverter\KeyConverterInterface;
+use EcPhp\ApiGwAuthenticationBundle\Service\KeyConverter\KeyConverterInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\KeyLoader\KeyLoaderInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\KeyLoader\RawKeyLoader;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;

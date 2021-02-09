@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace EcPhp\ApiGwAuthenticatorBundle\DependencyInjection;
+namespace EcPhp\ApiGwAuthenticationBundle\DependencyInjection;
 
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
-class ApiGwAuthenticatorExtension extends Extension
+class ApiGwAuthenticationExtension extends Extension
 {
     /**
      * @param array<string> $configs
@@ -19,8 +19,8 @@ class ApiGwAuthenticatorExtension extends Extension
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 
-        // Load API GW Authenticator configuration.
-        $container->setParameter('api_gw_authenticator', $config);
+        // Load API GW Authentication configuration.
+        $container->setParameter('api_gw_authentication', $config);
 
         $loader = new PhpFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.php');

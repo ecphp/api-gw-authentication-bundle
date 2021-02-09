@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace EcPhp\ApiGwAuthenticatorBundle\Security\Core\User;
+namespace EcPhp\ApiGwAuthenticationBundle\Security\Core\User;
 
 use Lexik\Bundle\JWTAuthenticationBundle\Security\User\JWTUserInterface;
 
-interface ApiGwAuthenticatorUserInterface extends JWTUserInterface
+interface ApiGwAuthenticationUserInterface extends JWTUserInterface
 {
     /**
      * @param mixed $default

@@ -1,5 +1,5 @@
 {
-    "name": "ecphp/api-gw-authenticator",
+    "name": "ecphp/api-gw-authentication-bundle",
     "type": "symfony-bundle",
     "description": "An API Gateway authenticator",
     "keywords": [
@@ -25,13 +25,13 @@
     },
     "autoload": {
         "psr-4": {
-            "EcPhp\\ApiGwAuthenticatorBundle\\": "src/"
+            "EcPhp\\ApiGwAuthenticationBundle\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "spec\\EcPhp\\ApiGwAuthenticatorBundle\\": "./spec/EcPhp/ApiGwAuthenticatorBundle/",
-            "tests\\EcPhp\\ApiGwAuthenticatorBundle\\": "./tests/src"
+            "spec\\EcPhp\\ApiGwAuthenticationBundle\\": "./spec/EcPhp/ApiGwAuthenticationBundle/",
+            "tests\\EcPhp\\ApiGwAuthenticationBundle\\": "./tests/src"
         }
     },
     "scripts": {
