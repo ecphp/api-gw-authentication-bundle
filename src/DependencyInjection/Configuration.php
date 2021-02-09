@@ -25,7 +25,7 @@ class Configuration implements ConfigurationInterface
             ->arrayNode('defaults')
             ->children()
             ->enumNode('env')
-            ->values(['production', 'acceptance', 'intra', 'custom'])
+            ->values(['production', 'acceptance', 'intra', 'user'])
             ->defaultValue('production')
             ->isRequired()
             ->cannotBeEmpty()

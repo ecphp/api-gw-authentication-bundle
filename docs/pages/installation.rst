@@ -25,7 +25,7 @@ Edit the bundle configuration by editing the file `config/packages/dev/api_gw_au
 
     api_gw_authentication:
         defaults:
-            env: acceptance # Available values are: acceptance, intra, production
+            env: acceptance # Available values are: acceptance, intra, production, user
 
     security:
         providers:

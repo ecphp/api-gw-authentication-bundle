@@ -11,7 +11,7 @@ The features it provides are:
 
 - Provides default configuration to work with API Gateway,
 - Has a failsafe mechanism for public key retrieval and embed the public keys of the default API Gateway in case of failure,
-- Provides a default `UserProvider` service and `User` entity,
+- Provides a default ``UserProvider`` service and ``User`` entity,
 
 API Gateway
 ~~~~~~~~~~~

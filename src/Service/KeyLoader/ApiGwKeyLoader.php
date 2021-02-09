@@ -6,7 +6,6 @@ namespace EcPhp\ApiGwAuthenticationBundle\Service\KeyLoader;
 
 use EcPhp\ApiGwAuthenticationBundle\Service\KeyConverter\KeyConverterInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\KeyLoader\RawKeyLoader;
-use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Throwable;
 
@@ -83,26 +82,32 @@ final class ApiGwKeyLoader implements KeyLoaderInterface
 
     public function loadKey($type)
     {
-        $key = $this->getKey($type);
+        $publicKey = $this->getPublicKey();
+        $signingKey = $this->getSigningKey();
+        $passPhrase = $this->getPassphrase();
 
-        if (true === file_exists($this->projectDir . $key)) {
-            return (new RawKeyLoader($this->projectDir . $this->getSigningKey(), $this->projectDir . $this->getPublicKey(), $this->getPassphrase()))->loadKey($type);
+        $key = KeyLoaderInterface::TYPE_PUBLIC === $type ? $publicKey : $signingKey;
+
+        if ('user' === $this->environment['env']) {
+            $keyPathCandidates = [
+                [$this->projectDir, $key], // Look in the App dir,
+                [__DIR__, $key], // Look in this bundle dir,
+                ['', $key], // Look whereever you want.
+            ];
+
+            foreach ($keyPathCandidates as $keyPathCandidateParts) {
+                if (true === file_exists(implode('', $keyPathCandidateParts))) {
+                    $prefix = current($keyPathCandidateParts);
+
+                    return (new RawKeyLoader($prefix . $signingKey, $prefix . $publicKey, $passPhrase))
+                        ->loadKey($type);
+                }
+            }
         }
-
-        if (true === file_exists(__DIR__ . $key)) {
-            return (new RawKeyLoader(__DIR__ . $this->getSigningKey(), __DIR__ . $this->getPublicKey(), $this->getPassphrase()))->loadKey($type);
-        }
-
-        if (true === file_exists($key)) {
-            return (new RawKeyLoader($this->getSigningKey(), $this->getPublicKey(), $this->getPassphrase()))->loadKey($type);
-        }
-
-        $keyLoader = new JWKSKeyLoader($this, $this->httpClient, $this->keyConverter);
 
         try {
-            $key = $keyLoader->loadKey($type);
-        } catch (TransportExceptionInterface $e) {
-            $key = $this->loadFailsafeKey($type);
+            $key = (new JWKSKeyLoader($this, $this->httpClient, $this->keyConverter))
+                ->loadKey($type);
         } catch (Throwable $e) {
             $key = $this->loadFailsafeKey($type);
         }
@@ -141,13 +146,6 @@ final class ApiGwKeyLoader implements KeyLoaderInterface
     private function getFailsafePublicKey(): string
     {
         return $this->environment['failsafe'][KeyLoaderInterface::TYPE_PUBLIC];
-    }
-
-    private function getKey(string $type): string
-    {
-        return KeyLoaderInterface::TYPE_PUBLIC === $type ?
-            $this->getPublicKey() :
-            $this->getSigningKey();
     }
 
     private function loadFailsafeKey(string $type): string

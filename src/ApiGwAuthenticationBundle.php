@@ -6,6 +6,6 @@ namespace EcPhp\ApiGwAuthenticationBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
-class ApiGwAuthenticationBundle extends Bundle
+final class ApiGwAuthenticationBundle extends Bundle
 {
 }

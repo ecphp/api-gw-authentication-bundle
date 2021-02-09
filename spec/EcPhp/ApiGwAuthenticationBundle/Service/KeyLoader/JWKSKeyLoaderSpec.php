@@ -92,10 +92,12 @@ class JWKSKeyLoaderSpec extends ObjectBehavior
 
         $response
             ->toArray()
-            ->willReturn(['keys' => []]);
+            ->willReturn(['keys' => [
+                'jwks array structure',
+            ]]);
 
         $keyConverter
-            ->fromJWKStoPEMS([])
+            ->fromJWKStoPEMS(['jwks array structure'])
             ->willReturn(['foo']);
 
         $httpClient
