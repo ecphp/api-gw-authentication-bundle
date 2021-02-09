@@ -39,6 +39,12 @@ class Configuration implements ConfigurationInterface
             ->children()
             ->scalarNode('public')->end()
             ->scalarNode('private')->defaultValue('')->end()
+            ->arrayNode('failsafe')
+            ->children()
+            ->scalarNode('public')->defaultValue('')->end()
+            ->scalarNode('private')->defaultValue('')->end()
+            ->end()
+            ->end()
             ->end()
             ->end()
             ->end()
@@ -53,14 +59,26 @@ class Configuration implements ConfigurationInterface
             'acceptance' => [
                 'public' => 'https://api.acceptance.tech.ec.europa.eu/federation/oauth/token/.well-known/jwks.json',
                 'private' => null,
+                'failsafe' => [
+                    'public' => '',
+                    'private' => '',
+                ],
             ],
             'production' => [
                 'public' => 'https://api.tech.ec.europa.eu/federation/oauth/token/.well-known/jwks.json',
                 'private' => null,
+                'failsafe' => [
+                    'public' => '',
+                    'private' => '',
+                ],
             ],
             'intra' => [
                 'public' => 'https://intrapi.tech.ec.europa.eu/federation/oauth/token/.well-known/jwks.json',
                 'private' => null,
+                'failsafe' => [
+                    'public' => '',
+                    'private' => '',
+                ],
             ],
         ];
     }

@@ -30,10 +30,6 @@ class ApiGwAuthenticatorUserProviderSpec extends ObjectBehavior
             ->shouldReturn(false);
     }
 
-    public function it_can_load_a_user_with_a_payload()
-    {
-    }
-
     public function it_can_load_by_username_and_payload()
     {
         $this

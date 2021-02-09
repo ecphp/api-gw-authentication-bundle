@@ -97,33 +97,6 @@ class ApiGwKeyLoaderSpec extends ObjectBehavior
             ->shouldReturn($key);
     }
 
-    public function it_can_get_user_private_key(HttpClientInterface $httpClient, KeyConverterInterface $keyConverter)
-    {
-        $configuration = [
-            'defaults' => [
-                'env' => 'user',
-            ],
-            'envs' => [
-                'user' => [
-                    KeyLoaderInterface::TYPE_PUBLIC => __DIR__ . '/../../../../../tests/src/Resources/keys/user/public.key',
-                    KeyLoaderInterface::TYPE_PRIVATE => __DIR__ . '/../../../../../tests/src/Resources/keys/user/private.key',
-                ],
-            ],
-        ];
-
-        $projectDir = __DIR__;
-
-        $this->beConstructedWith($httpClient, $keyConverter, $projectDir, $configuration);
-
-        $this
-            ->getSigningKey()
-            ->shouldReturn(__DIR__ . '/../../../../../tests/src/Resources/keys/user/private.key');
-
-        $this
-            ->loadKey(KeyLoaderInterface::TYPE_PRIVATE)
-            ->shouldReturn(file_get_contents(__DIR__ . '/../../../../../tests/src/Resources/keys/user/private.key'));
-    }
-
     public function it_can_get_user_failsafe_private_key(HttpClientInterface $httpClient, KeyConverterInterface $keyConverter)
     {
         $publicKeyFilepath = __DIR__ . '/../../../../../tests/src/Resources/keys/user/public.jwks.json';
@@ -151,7 +124,7 @@ class ApiGwKeyLoaderSpec extends ObjectBehavior
         $keyConverter
             ->fromJWKStoPEMS($jwks['keys'])
             ->willReturn([
-                'foo'
+                'foo',
             ]);
 
         $this->beConstructedWith($httpClient, $keyConverter, $projectDir, $configuration);
@@ -188,6 +161,33 @@ class ApiGwKeyLoaderSpec extends ObjectBehavior
         $this
             ->loadKey(KeyLoaderInterface::TYPE_PRIVATE)
             ->shouldReturn(file_get_contents($privateKeyFilepath));
+    }
+
+    public function it_can_get_user_private_key(HttpClientInterface $httpClient, KeyConverterInterface $keyConverter)
+    {
+        $configuration = [
+            'defaults' => [
+                'env' => 'user',
+            ],
+            'envs' => [
+                'user' => [
+                    KeyLoaderInterface::TYPE_PUBLIC => __DIR__ . '/../../../../../tests/src/Resources/keys/user/public.key',
+                    KeyLoaderInterface::TYPE_PRIVATE => __DIR__ . '/../../../../../tests/src/Resources/keys/user/private.key',
+                ],
+            ],
+        ];
+
+        $projectDir = __DIR__;
+
+        $this->beConstructedWith($httpClient, $keyConverter, $projectDir, $configuration);
+
+        $this
+            ->getSigningKey()
+            ->shouldReturn(__DIR__ . '/../../../../../tests/src/Resources/keys/user/private.key');
+
+        $this
+            ->loadKey(KeyLoaderInterface::TYPE_PRIVATE)
+            ->shouldReturn(file_get_contents(__DIR__ . '/../../../../../tests/src/Resources/keys/user/private.key'));
     }
 
     public function it_can_get_user_public_key(HttpClientInterface $httpClient, KeyConverterInterface $keyConverter)

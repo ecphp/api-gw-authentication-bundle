@@ -18,26 +18,29 @@ final class JWKSKeyLoader implements KeyLoaderInterface
 
     private KeyLoaderInterface $keyLoader;
 
-    public function __construct(KeyLoaderInterface $keyLoader, HttpClientInterface $httpClient, KeyConverterInterface $keyConverter)
-    {
+    public function __construct(
+        KeyLoaderInterface $keyLoader,
+        HttpClientInterface $httpClient,
+        KeyConverterInterface $keyConverter
+    ) {
         $this->keyLoader = $keyLoader;
         $this->httpClient = $httpClient;
         $this->keyConverter = $keyConverter;
     }
 
-    public function getPassphrase()
+    public function getPassphrase(): string
     {
-        return (string) $this->keyLoader->getPassphrase();
+        return $this->keyLoader->getPassphrase();
     }
 
-    public function getPublicKey()
+    public function getPublicKey(): string
     {
-        return (string) $this->keyLoader->getPublicKey();
+        return $this->keyLoader->getPublicKey();
     }
 
-    public function getSigningKey()
+    public function getSigningKey(): string
     {
-        return (string) $this->keyLoader->getSigningKey();
+        return $this->keyLoader->getSigningKey();
     }
 
     public function loadKey($type)

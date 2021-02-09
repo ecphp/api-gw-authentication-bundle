@@ -11,6 +11,11 @@ use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Throwable;
 
+/**
+ * Class ApiGwKeyLoader.
+ *
+ * phpcs:disable Generic.Files.LineLength.TooLong
+ */
 final class ApiGwKeyLoader implements KeyLoaderInterface
 {
     private array $configuration;
@@ -62,19 +67,19 @@ final class ApiGwKeyLoader implements KeyLoaderInterface
         $this->environment = $this->getEnvironment($configuration['defaults']['env']);
     }
 
-    public function getPassphrase()
+    public function getPassphrase(): string
     {
         return '';
     }
 
-    public function getPublicKey()
+    public function getPublicKey(): string
     {
-        return (string) $this->environment[KeyLoaderInterface::TYPE_PUBLIC];
+        return $this->environment[KeyLoaderInterface::TYPE_PUBLIC] ?? '';
     }
 
-    public function getSigningKey()
+    public function getSigningKey(): string
     {
-        return (string) $this->environment[KeyLoaderInterface::TYPE_PRIVATE];
+        return $this->environment[KeyLoaderInterface::TYPE_PRIVATE] ?? '';
     }
 
     public function loadKey($type)
