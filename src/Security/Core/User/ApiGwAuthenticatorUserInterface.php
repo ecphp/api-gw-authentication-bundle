@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace EcPhp\ApiGwAuthenticatorBundle\Security\Core\User;
 
-use Symfony\Component\Security\Core\User\UserInterface;
+use Lexik\Bundle\JWTAuthenticationBundle\Security\User\JWTUserInterface;
 
-interface ApiGwAuthenticatorUserInterface extends UserInterface
+interface ApiGwAuthenticatorUserInterface extends JWTUserInterface
 {
     /**
      * @param mixed $default

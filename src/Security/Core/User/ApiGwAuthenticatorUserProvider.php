@@ -4,37 +4,36 @@ declare(strict_types=1);
 
 namespace EcPhp\ApiGwAuthenticatorBundle\Security\Core\User;
 
-use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
+use Lexik\Bundle\JWTAuthenticationBundle\Security\User\JWTUserProvider;
+use Lexik\Bundle\JWTAuthenticationBundle\Security\User\PayloadAwareUserProviderInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
-use function get_class;
-
-final class ApiGwAuthenticatorUserProvider implements ApiGwAuthenticatorUserProviderInterface
+final class ApiGwAuthenticatorUserProvider implements PayloadAwareUserProviderInterface
 {
+    private PayloadAwareUserProviderInterface $userProvider;
+
+    public function __construct()
+    {
+        $this->userProvider = new JWTUserProvider(ApiGwAuthenticatorUser::class);
+    }
+
     public function loadUserByUsername(string $username): UserInterface
     {
-        throw new UnsupportedUserException(sprintf('Username "%s" does not exist.', $username));
+        return $this->userProvider->loadUserByUsername($username);
     }
 
     public function loadUserByUsernameAndPayload($username, array $payload)
     {
-        return new ApiGwAuthenticatorUser($username, $payload);
+        return $this->userProvider->loadUserByUsernameAndPayload($username, $payload);
     }
 
     public function refreshUser(UserInterface $user): UserInterface
     {
-        if (!$user instanceof ApiGwAuthenticatorUserInterface) {
-            throw new UnsupportedUserException(sprintf('Instances of "%s" are not supported.', get_class($user)));
-        }
-
-        return $user;
+        return $this->userProvider->refreshUser($user);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function supportsClass(string $class): bool
     {
-        return ApiGwAuthenticatorUser::class === $class;
+        return $this->userProvider->supportsClass($class);
     }
 }

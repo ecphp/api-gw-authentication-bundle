@@ -9,6 +9,22 @@ use PhpSpec\ObjectBehavior;
 
 class ApiGwAuthenticatorUserSpec extends ObjectBehavior
 {
+    public function it_can_be_created_through_createPayload()
+    {
+        $subject = $this::createFromPayload('username', ['sub' => 'sub']);
+
+        $subject
+            ->shouldBeAnInstanceOf(ApiGwAuthenticatorUserInterface::class);
+
+        $subject
+            ->getUsername()
+            ->shouldReturn('username');
+
+        $subject
+            ->get('sub')
+            ->shouldReturn('sub');
+    }
+
     public function it_can_get_its_username()
     {
         $this
@@ -55,6 +71,18 @@ class ApiGwAuthenticatorUserSpec extends ObjectBehavior
     public function it_is_initializable()
     {
         $this->shouldHaveType(ApiGwAuthenticatorUserInterface::class);
+
+        $this
+            ->eraseCredentials()
+            ->shouldReturn(null);
+
+        $this
+            ->getPassword()
+            ->shouldReturn(null);
+
+        $this
+            ->getSalt()
+            ->shouldReturn(null);
     }
 
     public function let()
@@ -65,6 +93,6 @@ class ApiGwAuthenticatorUserSpec extends ObjectBehavior
         ];
 
         $this
-            ->beConstructedWith($credentials);
+            ->beConstructedWith('username', $credentials);
     }
 }

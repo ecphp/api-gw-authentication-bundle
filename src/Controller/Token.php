@@ -14,20 +14,19 @@ final class Token
     {
         $username = uniqid('user_');
 
-        $user = new ApiGwAuthenticatorUser(
-            $username,
-            [
-                'iat' => time(),
-                'sub' => $username,
-                'jti' => uniqid(),
-                'iss' => '/api/token',
-                'foo' => 'bar',
-            ]
-        );
+        $payload = [
+            'iat' => time(),
+            'sub' => $username,
+            'jti' => uniqid(),
+            'iss' => '/api/token',
+            'foo' => 'bar',
+        ];
+
+        $user = new ApiGwAuthenticatorUser($username);
 
         return new JsonResponse(
             [
-                'token' => $jwtManager->create($user),
+                'token' => $jwtManager->createFromPayload($user, $payload),
             ]
         );
     }

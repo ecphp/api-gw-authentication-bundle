@@ -18,10 +18,15 @@ final class ApiGwAuthenticatorUser implements ApiGwAuthenticatorUserInterface
     /**
      * @param array<mixed> $data
      */
-    public function __construct(string $username, array $data)
+    public function __construct(string $username, array $data = [])
     {
         $this->sub = $username;
         $this->storage = $data;
+    }
+
+    public static function createFromPayload($username, array $payload)
+    {
+        return new self($username, $payload);
     }
 
     /**
