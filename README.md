@@ -15,13 +15,6 @@ The features it provides are:
 - Has a failsafe mechanism for public key retrieval and embed the public keys of the default API Gateway in case of failure,
 - Provides a default `UserProvider` service and `User` entity,
 
-## To follow
-
-2 patches needs to be committed in [lexik/jwt-authentication-bundle][http lexik/jwt-authentication-bundle]:
-
-- [#832](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/832)
-- [#833](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/833)
-
 ## API Gateway
 
 The European Commission API Gateway service allows you to deploy microservices as APIs behind the Gateway.
@@ -46,7 +39,7 @@ This service is based on the open source project [WSO2 API Gateway][http wso2 we
 ```json
     "repositories": [{
         "type": "vcs",
-        "url": "https://citnet.tech.ec.europa.eu/CITnet/stash/scm/ecphp/api-gw-authenticator.git"
+        "url": "https://github.com/ecphp/api-gw-authentication-bundle.git"
 
     }],
 ```
@@ -81,7 +74,7 @@ security:
 
 - Configure the security of your application through `config/packages/security.yaml`:
 
-    ```yaml
+```yaml
 security:
     firewalls:
         default:
@@ -93,7 +86,7 @@ security:
                     - lexik_jwt_authentication.jwt_token_authenticator
     access_control:
         - { path: ^/api, role: IS_AUTHENTICATED_FULLY }
-    ```
+```
 
 - Get a valid token from API Gateway.
 
