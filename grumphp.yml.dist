@@ -4,6 +4,8 @@ imports:
 parameters:
   tasks.phpstan.configuration: phpstan.neon
   extra_tasks:
+    psalm:
+      show_info: true
     phpspec:
       verbose: true
     clover_coverage:

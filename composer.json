@@ -21,7 +21,8 @@
         "friends-of-phpspec/phpspec-code-coverage": "^6.0",
         "infection/infection": "^0.21.0",
         "infection/phpspec-adapter": "^0.1.2",
-        "phpspec/phpspec": "^7.0"
+        "phpspec/phpspec": "^7.0",
+        "vimeo/psalm": "^4.4"
     },
     "autoload": {
         "psr-4": {
