@@ -23,5 +23,4 @@ You may customize a specific configuration by doing:
                 public: <path-to-public-key-in-pem>
                 private: <path-to-private-key-in-pem>
 
-However, it is impossible to override existing API Gateway environments (
-acceptance, intra and production).
+However, it is impossible to override existing API Gateway environments.
