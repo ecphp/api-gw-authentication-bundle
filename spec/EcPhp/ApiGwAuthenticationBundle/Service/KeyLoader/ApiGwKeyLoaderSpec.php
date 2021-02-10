@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace spec\EcPhp\ApiGwAuthenticationBundle\Service\KeyLoader;
 
+use EcPhp\ApiGwAuthenticationBundle\Exception\ApiGwAuthenticationException;
 use EcPhp\ApiGwAuthenticationBundle\Service\KeyConverter\KeyConverterInterface;
 use EcPhp\ApiGwAuthenticationBundle\Service\KeyLoader\ApiGwKeyLoader;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\KeyLoader\KeyLoaderInterface;
@@ -99,8 +100,8 @@ class ApiGwKeyLoaderSpec extends ObjectBehavior
 
     public function it_can_get_user_failsafe_private_key(HttpClientInterface $httpClient, KeyConverterInterface $keyConverter)
     {
-        $publicKeyFilepath = __DIR__ . '/../../../../../tests/src/Resources/keys/user/public.jwks.json';
-        $privateKeyFilepath = __DIR__ . '/../../../../../tests/src/Resources/keys/user/private.jwks.json';
+        $publicKeyFilepath = '/../../../tests/src/Resources/keys/user/public.jwks.json';
+        $privateKeyFilepath = '/../../../tests/src/Resources/keys/user/private.jwks.json';
         $configuration = [
             'defaults' => [
                 'env' => 'user',
@@ -119,7 +120,7 @@ class ApiGwKeyLoaderSpec extends ObjectBehavior
 
         $projectDir = __DIR__;
 
-        $jwks = json_decode(file_get_contents($privateKeyFilepath), true);
+        $jwks = json_decode(file_get_contents(__DIR__ . '/../..' . $privateKeyFilepath), true);
 
         $keyConverter
             ->fromJWKStoPEMS($jwks['keys'])
@@ -269,6 +270,64 @@ class ApiGwKeyLoaderSpec extends ObjectBehavior
             ->shouldReturn($key);
     }
 
+    public function it_throws_an_exception_when_failsafe_key_is_empty(HttpClientInterface $httpClient, KeyConverterInterface $keyConverter)
+    {
+        $publicKeyFilepath = '/../../../tests/src/Resources/keys/user/public.jwks.empty';
+        $privateKeyFilepath = '/../../../tests/src/Resources/keys/user/private.jwks.json';
+        $configuration = [
+            'defaults' => [
+                'env' => 'user',
+            ],
+            'envs' => [
+                'user' => [
+                    KeyLoaderInterface::TYPE_PUBLIC => 'http://a.b.c.d.e.f',
+                    KeyLoaderInterface::TYPE_PRIVATE => 'http://a.b.c.d.e.f',
+                    'failsafe' => [
+                        KeyLoaderInterface::TYPE_PUBLIC => $publicKeyFilepath,
+                        KeyLoaderInterface::TYPE_PRIVATE => $privateKeyFilepath,
+                    ],
+                ],
+            ],
+        ];
+
+        $projectDir = __DIR__;
+
+        $this->beConstructedWith($httpClient, $keyConverter, $projectDir, $configuration);
+
+        $this
+            ->shouldThrow(new ApiGwAuthenticationException('Invalid JWKS format of public key at /../../../tests/src/Resources/keys/user/public.jwks.empty, keys array is empty.'))
+            ->during('loadKey', [KeyLoaderInterface::TYPE_PUBLIC]);
+    }
+
+    public function it_throws_an_exception_when_failsafe_key_is_invalid(HttpClientInterface $httpClient, KeyConverterInterface $keyConverter)
+    {
+        $publicKeyFilepath = '/../../../tests/src/Resources/keys/user/public.jwks.invalid';
+        $privateKeyFilepath = '/../../../tests/src/Resources/keys/user/private.jwks.json';
+        $configuration = [
+            'defaults' => [
+                'env' => 'user',
+            ],
+            'envs' => [
+                'user' => [
+                    KeyLoaderInterface::TYPE_PUBLIC => 'http://a.b.c.d.e.f',
+                    KeyLoaderInterface::TYPE_PRIVATE => 'http://a.b.c.d.e.f',
+                    'failsafe' => [
+                        KeyLoaderInterface::TYPE_PUBLIC => $publicKeyFilepath,
+                        KeyLoaderInterface::TYPE_PRIVATE => $privateKeyFilepath,
+                    ],
+                ],
+            ],
+        ];
+
+        $projectDir = __DIR__;
+
+        $this->beConstructedWith($httpClient, $keyConverter, $projectDir, $configuration);
+
+        $this
+            ->shouldThrow(new ApiGwAuthenticationException('Invalid JWKS format of public key at /../../../tests/src/Resources/keys/user/public.jwks.invalid.'))
+            ->during('loadKey', [KeyLoaderInterface::TYPE_PUBLIC]);
+    }
+
     public function let(HttpClientInterface $httpClient, KeyConverterInterface $keyConverter)
     {
         $configuration = [
@@ -277,8 +336,8 @@ class ApiGwKeyLoaderSpec extends ObjectBehavior
             ],
             'envs' => [
                 'user' => [
-                    KeyLoaderInterface::TYPE_PUBLIC => __DIR__ . '/../../../../../tests/src/Resources/user/public.key',
-                    KeyLoaderInterface::TYPE_PRIVATE => __DIR__ . '/../../../../../tests/src/Resources/user/private.key',
+                    KeyLoaderInterface::TYPE_PUBLIC => '/../../../tests/src/Resources/user/public.key',
+                    KeyLoaderInterface::TYPE_PRIVATE => '/../../../tests/src/Resources/user/private.key',
                 ],
             ],
         ];

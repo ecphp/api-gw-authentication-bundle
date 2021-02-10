@@ -25,7 +25,7 @@ final class ApiGwKeyLoader implements KeyLoaderInterface
 
     private const API_GW_PRODUCTION = 'https://api.tech.ec.europa.eu/federation/oauth/token/.well-known/jwks.json';
 
-    private const LOCAL_FAILSAFE_PATH = __DIR__ . '/../../Resources/keys';
+    private const LOCAL_FAILSAFE_PATH = '/../../Resources/keys';
 
     private array $environment;
 
@@ -102,18 +102,13 @@ final class ApiGwKeyLoader implements KeyLoaderInterface
         $key = KeyLoaderInterface::TYPE_PUBLIC === $type ? $publicKey : $signingKey;
 
         if ('user' === $this->environment['env']) {
-            $keyPathCandidates = [
-                [$this->projectDir, $key], // Look in the App dir,
-                [__DIR__, $key], // Look in this bundle dir,
-            ];
+            $keyPathCandidateParts = $this->findFirstFileExist($key);
 
-            foreach ($keyPathCandidates as $keyPathCandidateParts) {
-                if (true === file_exists(implode('', $keyPathCandidateParts))) {
-                    $prefix = current($keyPathCandidateParts);
+            if ([] !== $keyPathCandidateParts) {
+                $prefix = current($keyPathCandidateParts);
 
-                    return (new RawKeyLoader($prefix . $signingKey, $prefix . $publicKey, $passPhrase))
-                        ->loadKey($type);
-                }
+                return (new RawKeyLoader($prefix . $signingKey, $prefix . $publicKey, $passPhrase))
+                    ->loadKey($type);
             }
         }
 
@@ -125,6 +120,25 @@ final class ApiGwKeyLoader implements KeyLoaderInterface
         }
 
         return $key;
+    }
+
+    private function findFirstFileExist(string $key): array
+    {
+        $candidates = array_map(
+            static fn (string $directory): array => [$directory, $key],
+            [
+                $this->projectDir,
+                __DIR__,
+            ]
+        );
+
+        foreach ($candidates as $candidate) {
+            if (true === file_exists(implode('', $candidate))) {
+                return $candidate;
+            }
+        }
+
+        return [];
     }
 
     private function getEnvironment(string $env, array $configuredEnvs): array
@@ -166,8 +180,10 @@ final class ApiGwKeyLoader implements KeyLoaderInterface
             $this->getFailsafePublicKey() :
             $this->getFailsafePrivateKey();
 
+        $keyPathCandidateParts = $this->findFirstFileExist($key);
+
         // Todo: Remove duplicated code in here and JWKSKeyLoader.
-        $jwksArray = json_decode(file_get_contents($key), true);
+        $jwksArray = json_decode(file_get_contents(implode('', $keyPathCandidateParts)), true);
 
         if (false === array_key_exists('keys', $jwksArray)) {
             throw new ApiGwAuthenticationException(

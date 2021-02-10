@@ -50,7 +50,7 @@ final class JWKSKeyLoader implements KeyLoaderInterface
         $key = $this->keyLoader->getPublicKey();
 
         try {
-            $jwks = $this->httpClient->request('GET', $key);
+            $response = $this->httpClient->request('GET', $key);
         } catch (Throwable $e) {
             throw new ApiGwAuthenticationException(
                 sprintf('Unable to request uri(%s) for %s key.', $key, $type),
@@ -59,26 +59,26 @@ final class JWKSKeyLoader implements KeyLoaderInterface
             );
         }
 
-        if (200 !== $statusCode = $jwks->getStatusCode()) {
+        if (200 !== $statusCode = $response->getStatusCode()) {
             throw new ApiGwAuthenticationException(
                 sprintf('Invalid code(%s) thrown while fetching the %s key at %s.', $statusCode, $type, $key)
             );
         }
 
-        $jwksArray = $jwks->toArray();
+        $jwks = $response->toArray();
 
-        if (false === array_key_exists('keys', $jwksArray)) {
+        if (false === array_key_exists('keys', $jwks)) {
             throw new ApiGwAuthenticationException(
                 sprintf('Invalid JWKS format of %s key at %s.', $type, $key)
             );
         }
 
-        if ([] === $jwksArray['keys']) {
+        if ([] === $jwks['keys']) {
             throw new ApiGwAuthenticationException(
                 sprintf('Invalid JWKS format of %s key at %s, keys array is empty.', $type, $key)
             );
         }
 
-        return current($this->keyConverter->fromJWKStoPEMS($jwksArray['keys']));
+        return current($this->keyConverter->fromJWKStoPEMS($jwks['keys']));
     }
 }

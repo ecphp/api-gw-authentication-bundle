@@ -35,19 +35,6 @@ class JWKSKeyLoaderSpec extends ObjectBehavior
             ->during('loadKey', [KeyLoaderInterface::TYPE_PUBLIC]);
     }
 
-    public function it_can_throw_when_the_request_failed(KeyLoaderInterface $keyLoader, HttpClientInterface $httpClient, KeyConverterInterface $keyConverter, ResponseInterface $response)
-    {
-        $this->prepareDeps($keyLoader, $httpClient, $keyConverter, $response);
-
-        $httpClient
-            ->request('GET', KeyLoaderInterface::TYPE_PUBLIC)
-            ->willThrow(new ApiGwAuthenticationException('foo'));
-
-        $this
-            ->shouldThrow(ApiGwAuthenticationException::class)
-            ->during('loadKey', [KeyLoaderInterface::TYPE_PUBLIC]);
-    }
-
     public function it_is_initializable()
     {
         $this->shouldHaveType(JWKSKeyLoader::class);
@@ -63,6 +50,53 @@ class JWKSKeyLoaderSpec extends ObjectBehavior
         $this
             ->getPassphrase()
             ->shouldReturn('passphrase');
+    }
+
+    public function it_throw_an_exception_when_the_jwks_has_no_keys(KeyLoaderInterface $keyLoader, HttpClientInterface $httpClient, KeyConverterInterface $keyConverter, ResponseInterface $response)
+    {
+        $this->prepareDeps($keyLoader, $httpClient, $keyConverter, $response);
+
+        $response
+            ->toArray()
+            ->willReturn(['keys' => []]);
+
+        $this
+            ->shouldThrow(
+                new ApiGwAuthenticationException(
+                    'Invalid JWKS format of public key at public, keys array is empty.'
+                )
+            )
+            ->during('loadKey', [KeyLoaderInterface::TYPE_PUBLIC]);
+    }
+
+    public function it_throw_an_exception_when_the_jwks_is_invalid(KeyLoaderInterface $keyLoader, HttpClientInterface $httpClient, KeyConverterInterface $keyConverter, ResponseInterface $response)
+    {
+        $this->prepareDeps($keyLoader, $httpClient, $keyConverter, $response);
+
+        $response
+            ->toArray()
+            ->willReturn(['foo' => 'bar']);
+
+        $this
+            ->shouldThrow(
+                new ApiGwAuthenticationException(
+                    'Invalid JWKS format of public key at public.'
+                )
+            )
+            ->during('loadKey', [KeyLoaderInterface::TYPE_PUBLIC]);
+    }
+
+    public function it_throw_an_exception_when_the_request_failed(KeyLoaderInterface $keyLoader, HttpClientInterface $httpClient, KeyConverterInterface $keyConverter, ResponseInterface $response)
+    {
+        $this->prepareDeps($keyLoader, $httpClient, $keyConverter, $response);
+
+        $httpClient
+            ->request('GET', KeyLoaderInterface::TYPE_PUBLIC)
+            ->willThrow(new ApiGwAuthenticationException('foo'));
+
+        $this
+            ->shouldThrow(ApiGwAuthenticationException::class)
+            ->during('loadKey', [KeyLoaderInterface::TYPE_PUBLIC]);
     }
 
     public function let(KeyLoaderInterface $keyLoader, HttpClientInterface $httpClient, KeyConverterInterface $keyConverter, ResponseInterface $response)
@@ -92,11 +126,11 @@ class JWKSKeyLoaderSpec extends ObjectBehavior
         $response
             ->toArray()
             ->willReturn(['keys' => [
-                'jwks array structure',
+                ['jwks array structure'],
             ]]);
 
         $keyConverter
-            ->fromJWKStoPEMS(['jwks array structure'])
+            ->fromJWKStoPEMS([['jwks array structure']])
             ->willReturn(['foo']);
 
         $httpClient
