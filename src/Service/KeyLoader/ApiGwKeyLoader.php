@@ -19,6 +19,14 @@ use function array_key_exists;
  */
 final class ApiGwKeyLoader implements KeyLoaderInterface
 {
+    private const API_GW_ACCEPTANCE = 'https://api.acceptance.tech.ec.europa.eu/federation/oauth/token/.well-known/jwks.json';
+
+    private const API_GW_INTRA = 'https://intrapi.tech.ec.europa.eu/federation/oauth/token/.well-known/jwks.json';
+
+    private const API_GW_PRODUCTION = 'https://api.tech.ec.europa.eu/federation/oauth/token/.well-known/jwks.json';
+
+    private const LOCAL_FAILSAFE_PATH = __DIR__ . '/../../Resources/keys';
+
     private array $configuration;
 
     private array $environment;
@@ -30,28 +38,28 @@ final class ApiGwKeyLoader implements KeyLoaderInterface
     private static array $mapping = [
         [
             'env' => 'production',
-            KeyLoaderInterface::TYPE_PUBLIC => 'https://api.tech.ec.europa.eu/federation/oauth/token/.well-known/jwks.json',
+            KeyLoaderInterface::TYPE_PUBLIC => self::API_GW_PRODUCTION,
             KeyLoaderInterface::TYPE_PRIVATE => '',
             'failsafe' => [
-                KeyLoaderInterface::TYPE_PUBLIC => __DIR__ . '/../../Resources/keys/production/jwks.json',
+                KeyLoaderInterface::TYPE_PUBLIC => self::LOCAL_FAILSAFE_PATH . '/production/jwks.json',
                 KeyLoaderInterface::TYPE_PRIVATE => '',
             ],
         ],
         [
             'env' => 'intra',
-            KeyLoaderInterface::TYPE_PUBLIC => 'https://intrapi.tech.ec.europa.eu/federation/oauth/token/.well-known/jwks.json',
+            KeyLoaderInterface::TYPE_PUBLIC => self::API_GW_INTRA,
             KeyLoaderInterface::TYPE_PRIVATE => '',
             'failsafe' => [
-                KeyLoaderInterface::TYPE_PUBLIC => __DIR__ . '/../../Resources/keys/intra/jwks.json',
+                KeyLoaderInterface::TYPE_PUBLIC => self::LOCAL_FAILSAFE_PATH . '/intra/jwks.json',
                 KeyLoaderInterface::TYPE_PRIVATE => '',
             ],
         ],
         [
             'env' => 'acceptance',
-            KeyLoaderInterface::TYPE_PUBLIC => 'https://api.acceptance.tech.ec.europa.eu/federation/oauth/token/.well-known/jwks.json',
+            KeyLoaderInterface::TYPE_PUBLIC => self::API_GW_ACCEPTANCE,
             KeyLoaderInterface::TYPE_PRIVATE => '',
             'failsafe' => [
-                KeyLoaderInterface::TYPE_PUBLIC => __DIR__ . '/../../Resources/keys/acceptance/jwks.json',
+                KeyLoaderInterface::TYPE_PUBLIC => self::LOCAL_FAILSAFE_PATH . '/acceptance/jwks.json',
                 KeyLoaderInterface::TYPE_PRIVATE => '',
             ],
         ],
