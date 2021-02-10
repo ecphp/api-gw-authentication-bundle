@@ -136,8 +136,8 @@ class ApiGwKeyLoaderSpec extends ObjectBehavior
 
     public function it_can_get_user_local_private_key(HttpClientInterface $httpClient, KeyConverterInterface $keyConverter)
     {
-        $publicKeyFilepath = __DIR__ . '/../../../../../tests/src/Resources/keys/user/public.jwks.json';
-        $privateKeyFilepath = __DIR__ . '/../../../../../tests/src/Resources/keys/user/private.jwks.json';
+        $publicKeyFilepath = '/../../../tests/src/Resources/keys/user/public.jwks.json';
+        $privateKeyFilepath = '/../../../tests/src/Resources/keys/user/private.jwks.json';
         $configuration = [
             'defaults' => [
                 'env' => 'user',
@@ -160,7 +160,7 @@ class ApiGwKeyLoaderSpec extends ObjectBehavior
 
         $this
             ->loadKey(KeyLoaderInterface::TYPE_PRIVATE)
-            ->shouldReturn(file_get_contents($privateKeyFilepath));
+            ->shouldReturn(file_get_contents(__DIR__ . '/../..' . $privateKeyFilepath));
     }
 
     public function it_can_get_user_private_key(HttpClientInterface $httpClient, KeyConverterInterface $keyConverter)
@@ -171,8 +171,8 @@ class ApiGwKeyLoaderSpec extends ObjectBehavior
             ],
             'envs' => [
                 'user' => [
-                    KeyLoaderInterface::TYPE_PUBLIC => __DIR__ . '/../../../../../tests/src/Resources/keys/user/public.key',
-                    KeyLoaderInterface::TYPE_PRIVATE => __DIR__ . '/../../../../../tests/src/Resources/keys/user/private.key',
+                    KeyLoaderInterface::TYPE_PUBLIC => '/../../../tests/src/Resources/keys/user/public.key',
+                    KeyLoaderInterface::TYPE_PRIVATE => '/../../../tests/src/Resources/keys/user/private.key',
                 ],
             ],
         ];
@@ -183,7 +183,7 @@ class ApiGwKeyLoaderSpec extends ObjectBehavior
 
         $this
             ->getSigningKey()
-            ->shouldReturn(__DIR__ . '/../../../../../tests/src/Resources/keys/user/private.key');
+            ->shouldReturn('/../../../tests/src/Resources/keys/user/private.key');
 
         $this
             ->loadKey(KeyLoaderInterface::TYPE_PRIVATE)
@@ -198,8 +198,8 @@ class ApiGwKeyLoaderSpec extends ObjectBehavior
             ],
             'envs' => [
                 'user' => [
-                    KeyLoaderInterface::TYPE_PUBLIC => __DIR__ . '/../../../../../tests/src/Resources/keys/user/public.key',
-                    KeyLoaderInterface::TYPE_PRIVATE => __DIR__ . '/../../../../../tests/src/Resources/keys/user/private.key',
+                    KeyLoaderInterface::TYPE_PUBLIC => '/../../../tests/src/Resources/keys/user/public.key',
+                    KeyLoaderInterface::TYPE_PRIVATE => '/../../../tests/src/Resources/keys/user/private.key',
                 ],
             ],
         ];
@@ -210,7 +210,7 @@ class ApiGwKeyLoaderSpec extends ObjectBehavior
 
         $this
             ->getPublicKey()
-            ->shouldReturn(__DIR__ . '/../../../../../tests/src/Resources/keys/user/public.key');
+            ->shouldReturn('/../../../tests/src/Resources/keys/user/public.key');
 
         $this
             ->loadKey(KeyLoaderInterface::TYPE_PUBLIC)

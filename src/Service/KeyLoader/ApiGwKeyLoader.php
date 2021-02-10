@@ -95,7 +95,6 @@ final class ApiGwKeyLoader implements KeyLoaderInterface
             $keyPathCandidates = [
                 [$this->projectDir, $key], // Look in the App dir,
                 [__DIR__, $key], // Look in this bundle dir,
-                ['', $key], // Look whereever you want.
             ];
 
             foreach ($keyPathCandidates as $keyPathCandidateParts) {
