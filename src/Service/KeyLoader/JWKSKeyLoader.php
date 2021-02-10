@@ -6,8 +6,8 @@ namespace EcPhp\ApiGwAuthenticationBundle\Service\KeyLoader;
 
 use EcPhp\ApiGwAuthenticationBundle\Exception\ApiGwAuthenticationException;
 use EcPhp\ApiGwAuthenticationBundle\Service\KeyConverter\KeyConverterInterface;
-use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
+use Throwable;
 
 use function array_key_exists;
 
@@ -44,15 +44,19 @@ final class JWKSKeyLoader implements KeyLoaderInterface
         return $this->keyLoader->getSigningKey();
     }
 
-    public function loadKey($type)
+    public function loadKey($type): string
     {
-        // @Todo: Implements for PRIVATE key as well.
+        // Todo: Implements for PRIVATE key as well.
         $key = $this->keyLoader->getPublicKey();
 
         try {
             $jwks = $this->httpClient->request('GET', $key);
-        } catch (TransportExceptionInterface $e) {
-            throw $e;
+        } catch (Throwable $e) {
+            throw new ApiGwAuthenticationException(
+                sprintf('Unable to request uri(%s) for %s key.', $key, $type),
+                $e->getCode(),
+                $e
+            );
         }
 
         if (200 !== $statusCode = $jwks->getStatusCode()) {

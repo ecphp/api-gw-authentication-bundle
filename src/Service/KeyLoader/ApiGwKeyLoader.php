@@ -4,10 +4,13 @@ declare(strict_types=1);
 
 namespace EcPhp\ApiGwAuthenticationBundle\Service\KeyLoader;
 
+use EcPhp\ApiGwAuthenticationBundle\Exception\ApiGwAuthenticationException;
 use EcPhp\ApiGwAuthenticationBundle\Service\KeyConverter\KeyConverterInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\KeyLoader\RawKeyLoader;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Throwable;
+
+use function array_key_exists;
 
 /**
  * Class ApiGwKeyLoader.
@@ -80,7 +83,7 @@ final class ApiGwKeyLoader implements KeyLoaderInterface
         return $this->environment[KeyLoaderInterface::TYPE_PRIVATE] ?? '';
     }
 
-    public function loadKey($type)
+    public function loadKey($type): string
     {
         $publicKey = $this->getPublicKey();
         $signingKey = $this->getSigningKey();
@@ -154,10 +157,21 @@ final class ApiGwKeyLoader implements KeyLoaderInterface
             $this->getFailsafePublicKey() :
             $this->getFailsafePrivateKey();
 
-        $jwks = json_decode(file_get_contents($key), true);
+        // Todo: Remove duplicated code in here and JWKSKeyLoader.
+        $jwksArray = json_decode(file_get_contents($key), true);
 
-        $keys = $this->keyConverter->fromJWKStoPEMS($jwks['keys']);
+        if (false === array_key_exists('keys', $jwksArray)) {
+            throw new ApiGwAuthenticationException(
+                sprintf('Invalid JWKS format of %s key at %s.', $type, $key)
+            );
+        }
 
-        return current($keys);
+        if ([] === $jwksArray['keys']) {
+            throw new ApiGwAuthenticationException(
+                sprintf('Invalid JWKS format of %s key at %s, keys array is empty.', $type, $key)
+            );
+        }
+
+        return current($this->keyConverter->fromJWKStoPEMS($jwksArray['keys']));
     }
 }

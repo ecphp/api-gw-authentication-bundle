@@ -4,13 +4,12 @@ declare(strict_types=1);
 
 namespace spec\EcPhp\ApiGwAuthenticationBundle\Service\KeyLoader;
 
+use EcPhp\ApiGwAuthenticationBundle\Exception\ApiGwAuthenticationException;
 use EcPhp\ApiGwAuthenticationBundle\Service\KeyConverter\KeyConverterInterface;
 use EcPhp\ApiGwAuthenticationBundle\Service\KeyLoader\JWKSKeyLoader;
 use EcPhp\ApiGwAuthenticationBundle\Service\KeyLoader\KeyLoaderInterface;
 use Exception;
 use PhpSpec\ObjectBehavior;
-use Symfony\Component\HttpClient\Exception\TransportException;
-use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Symfony\Contracts\HttpClient\ResponseInterface;
 
@@ -42,10 +41,10 @@ class JWKSKeyLoaderSpec extends ObjectBehavior
 
         $httpClient
             ->request('GET', KeyLoaderInterface::TYPE_PUBLIC)
-            ->willThrow(new TransportException('Error'));
+            ->willThrow(new ApiGwAuthenticationException('foo'));
 
         $this
-            ->shouldThrow(TransportExceptionInterface::class)
+            ->shouldThrow(ApiGwAuthenticationException::class)
             ->during('loadKey', [KeyLoaderInterface::TYPE_PUBLIC]);
     }
 
