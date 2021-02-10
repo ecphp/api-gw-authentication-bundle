@@ -22,10 +22,10 @@ Step 2
 The package does not have yet a recipe, so you have to copy some files over in your application
 in order to get everything working.
 
-Recursively copy the directory ``vendor/ecphp/api_gw_authentication/Resources/config`` in your application.
+Recursively copy the directory ``vendor/ecphp/api-gw-authentication-bundle/Resources/config`` in your application.
 
 .. warning:: Be carefull, copying this directory will copy the file
-   ``vendor/ecphp/api_gw_authentication/Resources/config/routes/dev/api_gw_authentication.yaml`` which
+   ``vendor/ecphp/api-gw-authentication-bundle/Resources/config/routes/dev/api_gw_authentication.yaml`` which
    enable some routes in your ``dev`` environment only. Those routes might be a security issue if they
    are enabled in the ``production`` environment.
    Those routes are ``/api/token`` and ``/api/user``.
