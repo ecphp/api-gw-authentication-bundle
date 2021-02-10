@@ -24,7 +24,7 @@ repository:
     allow_rebase_merge: false
     allow_squash_merge: true
     default_branch: master
-    description: "API Gateway Authentication Bundle, authenticate requests from European Commission service API Gateway."
+    description: "API Gateway Authentication Bundle, authenticate requests from European Commission corporate service 'API Gateway'."
     homepage: https://ecphp-api-gw-authentication-bundle.readthedocs.io
     topics: authentication,api-gateway,jwt
     has_downloads: true

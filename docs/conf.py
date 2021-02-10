@@ -270,7 +270,7 @@ man_pages = [
 #  dir menu entry, description, category)
 texinfo_documents = [
   (master_doc, 'ECPHP-API-Gateway-Authentication-Bundle', u'ECPHP API Gateway Authentication Bundle documentation',
-   author, 'API-Gateway-Authentication-Bundle', 'API Gateway Authentication Bundle, authenticate requests from European Commission service API Gateway.',
+   author, 'API-Gateway-Authentication-Bundle', 'API Gateway Authentication Bundle, authenticate requests from European Commission corporate service API Gateway.',
    'Miscellaneous'),
 ]
 
