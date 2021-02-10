@@ -27,8 +27,6 @@ final class ApiGwKeyLoader implements KeyLoaderInterface
 
     private const LOCAL_FAILSAFE_PATH = __DIR__ . '/../../Resources/keys';
 
-    private array $configuration;
-
     private array $environment;
 
     private HttpClientInterface $httpClient;
@@ -67,17 +65,21 @@ final class ApiGwKeyLoader implements KeyLoaderInterface
 
     private string $projectDir;
 
-    public function __construct(HttpClientInterface $httpClient, KeyConverterInterface $keyConverter, string $projectDir, array $configuration = [])
-    {
+    public function __construct(
+        HttpClientInterface $httpClient,
+        KeyConverterInterface $keyConverter,
+        string $projectDir,
+        array $configuration
+    ) {
         $this->httpClient = $httpClient;
         $this->keyConverter = $keyConverter;
         $this->projectDir = $projectDir;
-        $this->configuration = $configuration;
-        $this->environment = $this->getEnvironment($configuration['defaults']['env']);
+        $this->environment = $this->getEnvironment($configuration['defaults']['env'], $configuration['envs']);
     }
 
     public function getPassphrase(): string
     {
+        // Todo: Not supported yet.
         return '';
     }
 
@@ -125,11 +127,11 @@ final class ApiGwKeyLoader implements KeyLoaderInterface
         return $key;
     }
 
-    private function getEnvironment(string $env): array
+    private function getEnvironment(string $env, array $configuredEnvs): array
     {
         $envs = [];
 
-        foreach ($this->configuration['envs'] as $name => $data) {
+        foreach ($configuredEnvs as $name => $data) {
             $envs[] = [
                 'env' => $name,
                 KeyLoaderInterface::TYPE_PUBLIC => $data[KeyLoaderInterface::TYPE_PUBLIC],
