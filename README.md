@@ -10,7 +10,7 @@
 
 # API Gateway Authentication Bundle
 
-A bundle for PHP >= 7.4 and Symfony 5.
+A bundle for Symfony 5.
 
 Read more on the [dedicated documentation site][http readthedocs].
 
