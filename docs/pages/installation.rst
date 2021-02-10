@@ -27,11 +27,6 @@ Edit the bundle configuration by editing the file `config/packages/dev/api_gw_au
         defaults:
             env: acceptance # Available values are: acceptance, intra, production, user
 
-    security:
-        providers:
-            api_gw_authentication:
-                id: api_gw_authentication.user_provider
-
 Step 3
 ~~~~~~
 
@@ -47,7 +42,7 @@ Edit the security settings of your application by edition the file `config/packa
                 anonymous: ~
                 stateless: true
                 guard:
-                    provider: api_gw_authentication
+                    provider: api_gw_authentication # This is provided by default by the bundle.
                     authenticators:
                         - lexik_jwt_authentication.jwt_token_authenticator
         access_control:
