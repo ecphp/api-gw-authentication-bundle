@@ -16,23 +16,15 @@ The recommended way to install it is with Composer_ :
 
     composer require ecphp/api-gw-authentication-bundle
 
-Step 2
-~~~~~~
+This package has a `Symfony recipe`_ that will provides the minimum configuration files.
 
-The package does not have yet a recipe, so you have to copy some files over in your application
-in order to get everything working.
-
-Recursively copy the directory ``vendor/ecphp/api-gw-authentication-bundle/Resources/config`` in your application.
-
-.. warning:: Be carefull, copying this directory will copy the file
-   ``vendor/ecphp/api-gw-authentication-bundle/Resources/config/routes/dev/api_gw_authentication.yaml`` which
-   enable some routes in your ``dev`` environment only. Those routes might be a security issue if they
-   are enabled in the ``production`` environment.
+.. warning:: Be carefull, the recipe will create enable some routes in your ``dev`` environment only.
+   Those routes might be considered as a security issue if they are enabled in the ``production`` environment.
    Those routes are ``/api/token`` and ``/api/user``.
    Find the documentation related to those routes inside the classes themselves.
    To disable them completely, just delete the file ``packages/config/routes/dev/api_gw_authentication.yaml`` from your application.
 
-Step 3
+Step 2
 ~~~~~~
 
 Edit the bundle configuration by editing the file ``config/packages/dev/api_gw_authentication.yaml``.
@@ -43,7 +35,7 @@ Edit the bundle configuration by editing the file ``config/packages/dev/api_gw_a
         defaults:
             env: acceptance # Available values are: acceptance, intra, production, user
 
-Optionaly, to use your own public and private key, then you do not need this package.
+Optionally, to use your own public and private key, then you do not need this package.
 Simply enable the bundle `lexik/jwt-authentication-bundle`_ and follow their documentation.
 
 However, if you still want this package and your own keys, edit the configuration as such
@@ -61,7 +53,7 @@ However, if you still want this package and your own keys, edit the configuratio
 The environment ``user`` is the only custom environment that you can create. It has a very limited use.
 It was mostly created for the unit tests.
 
-Step 4
+Step 3
 ~~~~~~
 
 This is the crucial part of your application's security configuration.
@@ -93,3 +85,4 @@ Feel free to change these configuration to fits your need. Have a look at
 .. _a Symfony Flex recipe: https://github.com/symfony/recipes-contrib/blob/master/ecphp/api-gw-authentication-bundle/1.0/manifest.json
 .. _Composer: https://getcomposer.org
 .. _the Symfony documentation about security and Guard authentication: https://symfony.com/doc/current/security/guard_authentication.html
+.. _Symfony recipe: https://github.com/symfony/recipes-contrib/tree/master/ecphp/api-gw-authentication-bundle/1.0
