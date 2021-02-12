@@ -5,9 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased](https://github.com/ecphp/api-gw-authentication-bundle/compare/1.0.0...HEAD)
+## [1.0.1](https://github.com/ecphp/api-gw-authentication-bundle/compare/1.0.0...1.0.1)
 
-## 1.0.0 - 2021-02-10
+### Commits
+
+- refactor: Remove default configuration files - moved them to the Symfony recipe. [`09a1d62`](https://github.com/ecphp/api-gw-authentication-bundle/commit/09a1d622af4bbc9d360b83a38939c54edddcb3a5)
+
+## 1.0.0 - 2021-02-11
 
 ### Merged
 
@@ -16,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Commits
 
+- docs: Add CHANGELOG.md [`a1d3bcf`](https://github.com/ecphp/api-gw-authentication-bundle/commit/a1d3bcf7f9b59697036545e1514e1e4a81b79735)
 - docs: Fix paths to bundle. [`137822c`](https://github.com/ecphp/api-gw-authentication-bundle/commit/137822c95e74c78868ca489a5b69d5f3740c9d1c)
 - docs: Update naming. [`7985944`](https://github.com/ecphp/api-gw-authentication-bundle/commit/79859442bb03f3600de1340126fd36847af089d2)
 - docs: Update README. [`ab3d165`](https://github.com/ecphp/api-gw-authentication-bundle/commit/ab3d1656f63d72ab2ef20c24ff219392eb16fa36)
