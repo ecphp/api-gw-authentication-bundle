@@ -15,8 +15,10 @@ use EcPhp\ApiGwAuthenticationBundle\Service\KeyLoader\JWKSKeyLoader;
 use EcPhp\ApiGwAuthenticationBundle\Service\KeyLoader\KeyLoaderInterface;
 use Exception;
 use PhpSpec\ObjectBehavior;
-use Symfony\Contracts\HttpClient\HttpClientInterface;
-use Symfony\Contracts\HttpClient\ResponseInterface;
+use Psr\Http\Client\ClientInterface;
+use Psr\Http\Message\RequestFactoryInterface;
+use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ResponseInterface;
 
 class JWKSKeyLoaderSpec extends ObjectBehavior
 {
@@ -27,9 +29,15 @@ class JWKSKeyLoaderSpec extends ObjectBehavior
             ->shouldReturn('foo');
     }
 
-    public function it_can_throw_when_status_code_is_not_200(KeyLoaderInterface $keyLoader, HttpClientInterface $httpClient, KeyConverterInterface $keyConverter, ResponseInterface $response)
-    {
-        $this->prepareDeps($keyLoader, $httpClient, $keyConverter, $response);
+    public function it_can_throw_when_status_code_is_not_200(
+        KeyLoaderInterface $keyLoader,
+        ClientInterface $httpClient,
+        RequestFactoryInterface $requestFactory,
+        KeyConverterInterface $keyConverter,
+        ResponseInterface $response,
+        RequestInterface $request
+    ) {
+        $this->prepareDeps($keyLoader, $httpClient, $requestFactory, $keyConverter, $response, $request);
 
         $response
             ->getStatusCode()
@@ -57,13 +65,19 @@ class JWKSKeyLoaderSpec extends ObjectBehavior
             ->shouldReturn('passphrase');
     }
 
-    public function it_throw_an_exception_when_the_jwks_has_no_keys(KeyLoaderInterface $keyLoader, HttpClientInterface $httpClient, KeyConverterInterface $keyConverter, ResponseInterface $response)
-    {
-        $this->prepareDeps($keyLoader, $httpClient, $keyConverter, $response);
+    public function it_throw_an_exception_when_the_jwks_has_no_keys(
+        KeyLoaderInterface $keyLoader,
+        ClientInterface $httpClient,
+        RequestFactoryInterface $requestFactory,
+        KeyConverterInterface $keyConverter,
+        ResponseInterface $response,
+        RequestInterface $request
+    ) {
+        $this->prepareDeps($keyLoader, $httpClient, $requestFactory, $keyConverter, $response, $request);
 
         $response
-            ->toArray()
-            ->willReturn(['keys' => []]);
+            ->getBody()
+            ->willReturn(json_encode(['keys' => []]));
 
         $this
             ->shouldThrow(
@@ -74,13 +88,19 @@ class JWKSKeyLoaderSpec extends ObjectBehavior
             ->during('loadKey', [KeyLoaderInterface::TYPE_PUBLIC]);
     }
 
-    public function it_throw_an_exception_when_the_jwks_is_invalid(KeyLoaderInterface $keyLoader, HttpClientInterface $httpClient, KeyConverterInterface $keyConverter, ResponseInterface $response)
-    {
-        $this->prepareDeps($keyLoader, $httpClient, $keyConverter, $response);
+    public function it_throw_an_exception_when_the_jwks_is_invalid(
+        KeyLoaderInterface $keyLoader,
+        ClientInterface $httpClient,
+        RequestFactoryInterface $requestFactory,
+        KeyConverterInterface $keyConverter,
+        ResponseInterface $response,
+        RequestInterface $request
+    ) {
+        $this->prepareDeps($keyLoader, $httpClient, $requestFactory, $keyConverter, $response, $request);
 
         $response
-            ->toArray()
-            ->willReturn(['foo' => 'bar']);
+            ->getBody()
+            ->willReturn(json_encode(['foo' => 'bar']));
 
         $this
             ->shouldThrow(
@@ -91,12 +111,18 @@ class JWKSKeyLoaderSpec extends ObjectBehavior
             ->during('loadKey', [KeyLoaderInterface::TYPE_PUBLIC]);
     }
 
-    public function it_throw_an_exception_when_the_request_failed(KeyLoaderInterface $keyLoader, HttpClientInterface $httpClient, KeyConverterInterface $keyConverter, ResponseInterface $response)
-    {
-        $this->prepareDeps($keyLoader, $httpClient, $keyConverter, $response);
+    public function it_throw_an_exception_when_the_request_failed(
+        KeyLoaderInterface $keyLoader,
+        ClientInterface $httpClient,
+        RequestFactoryInterface $requestFactory,
+        KeyConverterInterface $keyConverter,
+        ResponseInterface $response,
+        RequestInterface $request
+    ) {
+        $this->prepareDeps($keyLoader, $httpClient, $requestFactory, $keyConverter, $response, $request);
 
         $httpClient
-            ->request('GET', KeyLoaderInterface::TYPE_PUBLIC)
+            ->sendRequest($request)
             ->willThrow(new ApiGwAuthenticationException('foo'));
 
         $this
@@ -104,14 +130,26 @@ class JWKSKeyLoaderSpec extends ObjectBehavior
             ->during('loadKey', [KeyLoaderInterface::TYPE_PUBLIC]);
     }
 
-    public function let(KeyLoaderInterface $keyLoader, HttpClientInterface $httpClient, KeyConverterInterface $keyConverter, ResponseInterface $response)
-    {
-        $this->prepareDeps($keyLoader, $httpClient, $keyConverter, $response);
-        $this->beConstructedWith($keyLoader, $httpClient, $keyConverter);
+    public function let(
+        KeyLoaderInterface $keyLoader,
+        ClientInterface $httpClient,
+        RequestFactoryInterface $requestFactory,
+        KeyConverterInterface $keyConverter,
+        ResponseInterface $response,
+        RequestInterface $request
+    ) {
+        $this->prepareDeps($keyLoader, $httpClient, $requestFactory, $keyConverter, $response, $request);
+        $this->beConstructedWith($keyLoader, $httpClient, $requestFactory, $keyConverter);
     }
 
-    private function prepareDeps(KeyLoaderInterface $keyLoader, HttpClientInterface $httpClient, KeyConverterInterface $keyConverter, ResponseInterface $response): void
-    {
+    private function prepareDeps(
+        KeyLoaderInterface $keyLoader,
+        ClientInterface $httpClient,
+        RequestFactoryInterface $requestFactory,
+        KeyConverterInterface $keyConverter,
+        ResponseInterface $response,
+        RequestInterface $request
+    ): void {
         $keyLoader
             ->getSigningKey()
             ->willReturn(KeyLoaderInterface::TYPE_PRIVATE);
@@ -129,17 +167,29 @@ class JWKSKeyLoaderSpec extends ObjectBehavior
             ->willReturn(200);
 
         $response
-            ->toArray()
-            ->willReturn(['keys' => [
-                ['jwks array structure'],
-            ]]);
+            ->getBody()
+            ->willReturn(
+                json_encode([
+                    'keys' => [
+                        [
+                            'jwks array structure',
+                        ],
+                    ],
+                ])
+            );
 
         $keyConverter
             ->fromJWKStoPEMS([['jwks array structure']])
             ->willReturn(['foo']);
 
+        $requestFactory
+            ->createRequest('GET', KeyLoaderInterface::TYPE_PUBLIC)
+            ->willReturn(
+                $request
+            );
+
         $httpClient
-            ->request('GET', KeyLoaderInterface::TYPE_PUBLIC)
+            ->sendRequest($request)
             ->willReturn(
                 $response
             );
