@@ -14,10 +14,14 @@ use EcPhp\ApiGwAuthenticationBundle\Security\Core\User\ApiGwAuthenticationUserPr
 use EcPhp\ApiGwAuthenticationBundle\Service\KeyConverter\KeyConverter;
 use EcPhp\ApiGwAuthenticationBundle\Service\KeyConverter\KeyConverterInterface;
 use EcPhp\ApiGwAuthenticationBundle\Service\KeyLoader\ApiGwKeyLoader;
-use Psr\Http\Client\ClientInterface;
-use Psr\Http\Message\RequestFactoryInterface;
 
 return static function (ContainerConfigurator $container) {
+    $container
+        ->services()
+        ->set('api_gw_authentication.http_client', CachingHttpClient::class)
+        ->arg('$store', service('http_cache.store'))
+        ->autowire(true)
+        ->autoconfigure(true);
     $container
         ->services()
         ->set('api_gw_authentication.key_converter.jwk_converter', JWKConverter::class)
@@ -44,8 +48,7 @@ return static function (ContainerConfigurator $container) {
         ->decorate('lexik_jwt_authentication.key_loader.raw')
         ->arg('$configuration', '%api_gw_authentication%')
         ->arg('$projectDir', '%kernel.project_dir%')
-        ->arg('$httpClient', service(ClientInterface::class))
-        ->arg('$requestFactory', service(RequestFactoryInterface::class))
+        ->arg('$httpClient', service('api_gw_authentication.http_client'))
         ->autowire(true)
         ->autoconfigure(true);
 

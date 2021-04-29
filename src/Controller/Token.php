@@ -29,9 +29,6 @@ final class Token
 
         $user = new ApiGwAuthenticationUser($username);
 
-        dump($user);
-        dump($payload);
-
         return new JsonResponse(
             [
                 'token' => $jwtManager->createFromPayload($user, $payload),
