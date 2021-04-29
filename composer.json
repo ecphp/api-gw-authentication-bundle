@@ -10,19 +10,24 @@
     "license": "BSD-3-Clause",
     "require": {
         "php": ">= 7.4",
+        "ext-json": "*",
         "codercat/jwk-to-pem": "^1",
         "lexik/jwt-authentication-bundle": "^2.11",
-        "sensio/framework-extra-bundle": "^6",
-        "symfony/dependency-injection": "^5.2",
-        "symfony/http-client": "^5.2"
+        "psr/http-client": "^1.0",
+        "psr/http-message": "^1.0",
+        "symfony/framework-bundle": "^5.2"
     },
     "require-dev": {
-        "drupol/php-conventions": "^3.0.2",
+        "drupol/php-conventions": "^4.0.3",
         "friends-of-phpspec/phpspec-code-coverage": "^6.0",
         "infection/infection": "^0.21.0",
         "infection/phpspec-adapter": "^0.1.2",
         "phpspec/phpspec": "^7.0",
-        "vimeo/psalm": "^4.4"
+        "vimeo/psalm": "^4",
+        "nyholm/psr7": "^1.4"
+    },
+    "suggest": {
+        "nyholm/psr7": "A super lightweight PSR-7 implementation."
     },
     "autoload": {
         "psr-4": {
@@ -36,6 +41,8 @@
         }
     },
     "scripts": {
+        "changelog-unreleased": "docker-compose run auto_changelog -c .auto-changelog -u",
+        "changelog-version": "docker-compose run auto_changelog -c .auto-changelog -v",
         "grumphp": "./vendor/bin/grumphp run"
     }
 }
