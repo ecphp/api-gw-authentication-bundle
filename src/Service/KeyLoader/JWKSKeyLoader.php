@@ -11,26 +11,31 @@ namespace EcPhp\ApiGwAuthenticationBundle\Service\KeyLoader;
 
 use EcPhp\ApiGwAuthenticationBundle\Exception\ApiGwAuthenticationException;
 use EcPhp\ApiGwAuthenticationBundle\Service\KeyConverter\KeyConverterInterface;
-use Symfony\Contracts\HttpClient\HttpClientInterface;
+use Psr\Http\Client\ClientInterface;
+use Psr\Http\Message\RequestFactoryInterface;
 use Throwable;
 
 use function array_key_exists;
 
 final class JWKSKeyLoader implements KeyLoaderInterface
 {
-    private HttpClientInterface $httpClient;
+    private ClientInterface $httpClient;
 
     private KeyConverterInterface $keyConverter;
 
     private KeyLoaderInterface $keyLoader;
 
+    private RequestFactoryInterface $requestFactory;
+
     public function __construct(
         KeyLoaderInterface $keyLoader,
-        HttpClientInterface $httpClient,
+        ClientInterface $httpClient,
+        RequestFactoryInterface $requestFactory,
         KeyConverterInterface $keyConverter
     ) {
         $this->keyLoader = $keyLoader;
         $this->httpClient = $httpClient;
+        $this->requestFactory = $requestFactory;
         $this->keyConverter = $keyConverter;
     }
 
@@ -55,7 +60,16 @@ final class JWKSKeyLoader implements KeyLoaderInterface
         $key = $this->keyLoader->getPublicKey();
 
         try {
-            $response = $this->httpClient->request('GET', $key);
+            $response = $this
+                ->httpClient
+                ->sendRequest(
+                    $this
+                        ->requestFactory
+                        ->createRequest(
+                            'GET',
+                            $key
+                        )
+                );
         } catch (Throwable $e) {
             throw new ApiGwAuthenticationException(
                 sprintf('Unable to request uri(%s) for %s key.', $key, $type),
@@ -70,7 +84,7 @@ final class JWKSKeyLoader implements KeyLoaderInterface
             );
         }
 
-        $jwks = $response->toArray();
+        $jwks = (array) json_decode((string) $response->getBody(), true);
 
         if (false === array_key_exists('keys', $jwks)) {
             throw new ApiGwAuthenticationException(
