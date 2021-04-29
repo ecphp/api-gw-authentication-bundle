@@ -14,6 +14,7 @@ use EcPhp\ApiGwAuthenticationBundle\Security\Core\User\ApiGwAuthenticationUserPr
 use EcPhp\ApiGwAuthenticationBundle\Service\KeyConverter\KeyConverter;
 use EcPhp\ApiGwAuthenticationBundle\Service\KeyConverter\KeyConverterInterface;
 use EcPhp\ApiGwAuthenticationBundle\Service\KeyLoader\ApiGwKeyLoader;
+use Symfony\Component\HttpClient\CachingHttpClient;
 
 return static function (ContainerConfigurator $container) {
     $container
