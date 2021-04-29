@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * For the full copyright and license information, please view
+ * the LICENSE file that was distributed with this source code.
+ */
+
 declare(strict_types=1);
 
 namespace EcPhp\ApiGwAuthenticationBundle\Controller;
@@ -23,6 +28,9 @@ final class Token
         ];
 
         $user = new ApiGwAuthenticationUser($username);
+
+        dump($user);
+        dump($payload);
 
         return new JsonResponse(
             [
