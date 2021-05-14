@@ -15,7 +15,8 @@
         "lexik/jwt-authentication-bundle": "^2.11",
         "psr/http-client": "^1.0",
         "psr/http-message": "^1.0",
-        "symfony/framework-bundle": "^5.2"
+        "symfony/framework-bundle": "^5.2",
+        "symfony/http-client": "^5.2"
     },
     "require-dev": {
         "ecphp/php-conventions": "^1",

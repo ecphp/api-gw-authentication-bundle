@@ -23,6 +23,7 @@ return static function (ContainerConfigurator $container) {
         ->arg('$store', service('http_cache.store'))
         ->autowire(true)
         ->autoconfigure(true);
+
     $container
         ->services()
         ->set('api_gw_authentication.key_converter.jwk_converter', JWKConverter::class)
