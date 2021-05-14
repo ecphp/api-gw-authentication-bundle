@@ -16,16 +16,8 @@ use EcPhp\ApiGwAuthenticationBundle\Service\KeyConverter\KeyConverterInterface;
 use EcPhp\ApiGwAuthenticationBundle\Service\KeyLoader\ApiGwKeyLoader;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
-use Symfony\Component\HttpClient\CachingHttpClient;
 
 return static function (ContainerConfigurator $container) {
-    $container
-        ->services()
-        ->set('api_gw_authentication.http_client', CachingHttpClient::class)
-        ->arg('$store', service('http_cache.store'))
-        ->autowire(true)
-        ->autoconfigure(true);
-
     $container
         ->services()
         ->set('api_gw_authentication.key_converter.jwk_converter', JWKConverter::class)
