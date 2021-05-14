@@ -10,7 +10,17 @@ Default configuration files will be copied in the `dev` environment.
 Step 1
 ~~~~~~
 
-The recommended way to install it is with Composer_ :
+The recommended way to install it is with Composer_.
+
+This package requires a PSR HTTP client and a PSR Message implementation.
+
+We recommend using `symfony/http-client` and `nyholm/psr7`, but feel free to use
+the one you prefer.
+
+.. code-block:: bash
+
+    composer require symfony/http-client
+    composer require nyholm/psr7
 
 .. code-block:: bash
 
