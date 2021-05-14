@@ -12,7 +12,8 @@ namespace EcPhp\ApiGwAuthenticationBundle\Service\KeyLoader;
 use EcPhp\ApiGwAuthenticationBundle\Exception\ApiGwAuthenticationException;
 use EcPhp\ApiGwAuthenticationBundle\Service\KeyConverter\KeyConverterInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\KeyLoader\RawKeyLoader;
-use Symfony\Contracts\HttpClient\HttpClientInterface;
+use Psr\Http\Client\ClientInterface;
+use Psr\Http\Message\RequestFactoryInterface;
 use Throwable;
 
 use function array_key_exists;
@@ -34,7 +35,7 @@ final class ApiGwKeyLoader implements KeyLoaderInterface
 
     private array $environment;
 
-    private HttpClientInterface $httpClient;
+    private ClientInterface $httpClient;
 
     private KeyConverterInterface $keyConverter;
 
@@ -70,13 +71,17 @@ final class ApiGwKeyLoader implements KeyLoaderInterface
 
     private string $projectDir;
 
+    private RequestFactoryInterface $requestFactory;
+
     public function __construct(
-        HttpClientInterface $httpClient,
+        ClientInterface $httpClient,
+        RequestFactoryInterface $requestFactory,
         KeyConverterInterface $keyConverter,
         string $projectDir,
         array $configuration
     ) {
         $this->httpClient = $httpClient;
+        $this->requestFactory = $requestFactory;
         $this->keyConverter = $keyConverter;
         $this->projectDir = $projectDir;
         $this->environment = $this->getEnvironment($configuration['defaults']['env'], $configuration['envs']);
@@ -118,7 +123,7 @@ final class ApiGwKeyLoader implements KeyLoaderInterface
         }
 
         try {
-            $key = (new JWKSKeyLoader($this, $this->httpClient, $this->keyConverter))
+            $key = (new JWKSKeyLoader($this, $this->httpClient, $this->requestFactory, $this->keyConverter))
                 ->loadKey($type);
         } catch (Throwable $e) {
             $key = $this->loadFailsafeKey($type);

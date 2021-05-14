@@ -14,13 +14,21 @@ use EcPhp\ApiGwAuthenticationBundle\Service\KeyConverter\KeyConverterInterface;
 use EcPhp\ApiGwAuthenticationBundle\Service\KeyLoader\ApiGwKeyLoader;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\KeyLoader\KeyLoaderInterface;
 use PhpSpec\ObjectBehavior;
-use Symfony\Contracts\HttpClient\HttpClientInterface;
+use Prophecy\Argument;
+use Psr\Http\Client\ClientInterface;
+use Psr\Http\Message\RequestFactoryInterface;
+use Psr\Http\Message\RequestInterface;
 use Symfony\Contracts\HttpClient\ResponseInterface;
 
 class ApiGwKeyLoaderSpec extends ObjectBehavior
 {
-    public function it_can_get_the_api_gateway_production_failsafe_key(HttpClientInterface $httpClient, KeyConverterInterface $keyConverter, ResponseInterface $response)
-    {
+    public function it_can_get_the_api_gateway_production_failsafe_key(
+        ClientInterface $httpClient,
+        RequestFactoryInterface $requestFactory,
+        KeyConverterInterface $keyConverter,
+        ResponseInterface $response,
+        RequestInterface $request
+    ) {
         $configuration = [
             'defaults' => [
                 'env' => 'production',
@@ -35,11 +43,15 @@ class ApiGwKeyLoaderSpec extends ObjectBehavior
             ->willReturn(500);
 
         $response
-            ->toArray()
-            ->willReturn([]);
+            ->getContent()
+            ->willReturn('');
+
+        $requestFactory
+            ->createRequest('GET', 'https://api.tech.ec.europa.eu/federation/oauth/token/.well-known/jwks.json')
+            ->willReturn($request);
 
         $httpClient
-            ->request('GET', 'https://api.tech.ec.europa.eu/federation/oauth/token/.well-known/jwks.json')
+            ->sendRequest(Argument::type(RequestInterface::class))
             ->willReturn($response);
 
         $key = file_get_contents(__DIR__ . '/../../../../../src/Resources/keys/production/public.key');
@@ -50,7 +62,7 @@ class ApiGwKeyLoaderSpec extends ObjectBehavior
                 $key,
             ]);
 
-        $this->beConstructedWith($httpClient, $keyConverter, $projectDir, $configuration);
+        $this->beConstructedWith($httpClient, $requestFactory, $keyConverter, $projectDir, $configuration);
 
         $this
             ->getPublicKey()
@@ -61,8 +73,12 @@ class ApiGwKeyLoaderSpec extends ObjectBehavior
             ->shouldReturn($key);
     }
 
-    public function it_can_get_the_api_gateway_production_key(HttpClientInterface $httpClient, KeyConverterInterface $keyConverter, ResponseInterface $response)
-    {
+    public function it_can_get_the_api_gateway_production_key(
+        ClientInterface $httpClient,
+        RequestFactoryInterface $requestFactory,
+        KeyConverterInterface $keyConverter,
+        ResponseInterface $response
+    ) {
         $configuration = [
             'defaults' => [
                 'env' => 'production',
@@ -82,7 +98,7 @@ class ApiGwKeyLoaderSpec extends ObjectBehavior
             ->willReturn($jwksArray);
 
         $httpClient
-            ->request('GET', 'https://api.tech.ec.europa.eu/federation/oauth/token/.well-known/jwks.json')
+            ->sendRequest(Argument::type(RequestInterface::class))
             ->willReturn($response);
 
         $key = file_get_contents(__DIR__ . '/../../../../../src/Resources/keys/production/public.key');
@@ -92,7 +108,7 @@ class ApiGwKeyLoaderSpec extends ObjectBehavior
                 $key,
             ]);
 
-        $this->beConstructedWith($httpClient, $keyConverter, $projectDir, $configuration);
+        $this->beConstructedWith($httpClient, $requestFactory, $keyConverter, $projectDir, $configuration);
 
         $this
             ->getPublicKey()
@@ -103,8 +119,11 @@ class ApiGwKeyLoaderSpec extends ObjectBehavior
             ->shouldReturn($key);
     }
 
-    public function it_can_get_user_failsafe_private_key(HttpClientInterface $httpClient, KeyConverterInterface $keyConverter)
-    {
+    public function it_can_get_user_failsafe_private_key(
+        ClientInterface $httpClient,
+        RequestFactoryInterface $requestFactory,
+        KeyConverterInterface $keyConverter
+    ) {
         $publicKeyFilepath = '/../../../tests/src/Resources/keys/user/public.jwks.json';
         $privateKeyFilepath = '/../../../tests/src/Resources/keys/user/private.jwks.json';
         $configuration = [
@@ -133,15 +152,18 @@ class ApiGwKeyLoaderSpec extends ObjectBehavior
                 'foo',
             ]);
 
-        $this->beConstructedWith($httpClient, $keyConverter, $projectDir, $configuration);
+        $this->beConstructedWith($httpClient, $requestFactory, $keyConverter, $projectDir, $configuration);
 
         $this
             ->loadKey(KeyLoaderInterface::TYPE_PRIVATE)
             ->shouldReturn('foo');
     }
 
-    public function it_can_get_user_local_private_key(HttpClientInterface $httpClient, KeyConverterInterface $keyConverter)
-    {
+    public function it_can_get_user_local_private_key(
+        ClientInterface $httpClient,
+        RequestFactoryInterface $requestFactory,
+        KeyConverterInterface $keyConverter
+    ) {
         $publicKeyFilepath = '/../../../tests/src/Resources/keys/user/public.jwks.json';
         $privateKeyFilepath = '/../../../tests/src/Resources/keys/user/private.jwks.json';
         $configuration = [
@@ -162,15 +184,18 @@ class ApiGwKeyLoaderSpec extends ObjectBehavior
 
         $projectDir = __DIR__;
 
-        $this->beConstructedWith($httpClient, $keyConverter, $projectDir, $configuration);
+        $this->beConstructedWith($httpClient, $requestFactory, $keyConverter, $projectDir, $configuration);
 
         $this
             ->loadKey(KeyLoaderInterface::TYPE_PRIVATE)
             ->shouldReturn(file_get_contents(__DIR__ . '/../..' . $privateKeyFilepath));
     }
 
-    public function it_can_get_user_private_key(HttpClientInterface $httpClient, KeyConverterInterface $keyConverter)
-    {
+    public function it_can_get_user_private_key(
+        ClientInterface $httpClient,
+        RequestFactoryInterface $requestFactory,
+        KeyConverterInterface $keyConverter
+    ) {
         $configuration = [
             'defaults' => [
                 'env' => 'user',
@@ -185,7 +210,7 @@ class ApiGwKeyLoaderSpec extends ObjectBehavior
 
         $projectDir = __DIR__;
 
-        $this->beConstructedWith($httpClient, $keyConverter, $projectDir, $configuration);
+        $this->beConstructedWith($httpClient, $requestFactory, $keyConverter, $projectDir, $configuration);
 
         $this
             ->getSigningKey()
@@ -196,8 +221,11 @@ class ApiGwKeyLoaderSpec extends ObjectBehavior
             ->shouldReturn(file_get_contents(__DIR__ . '/../../../../../tests/src/Resources/keys/user/private.key'));
     }
 
-    public function it_can_get_user_public_key(HttpClientInterface $httpClient, KeyConverterInterface $keyConverter)
-    {
+    public function it_can_get_user_public_key(
+        ClientInterface $httpClient,
+        RequestFactoryInterface $requestFactory,
+        KeyConverterInterface $keyConverter
+    ) {
         $configuration = [
             'defaults' => [
                 'env' => 'user',
@@ -212,7 +240,7 @@ class ApiGwKeyLoaderSpec extends ObjectBehavior
 
         $projectDir = __DIR__;
 
-        $this->beConstructedWith($httpClient, $keyConverter, $projectDir, $configuration);
+        $this->beConstructedWith($httpClient, $requestFactory, $keyConverter, $projectDir, $configuration);
 
         $this
             ->getPublicKey()
@@ -228,8 +256,12 @@ class ApiGwKeyLoaderSpec extends ObjectBehavior
         $this->shouldHaveType(ApiGwKeyLoader::class);
     }
 
-    public function it_make_sure_that_official_keys_cannot_be_overriden(HttpClientInterface $httpClient, KeyConverterInterface $keyConverter, ResponseInterface $response)
-    {
+    public function it_make_sure_that_official_keys_cannot_be_overriden(
+        ClientInterface $httpClient,
+        RequestFactoryInterface $requestFactory,
+        KeyConverterInterface $keyConverter,
+        ResponseInterface $response
+    ) {
         $configuration = [
             'defaults' => [
                 'env' => 'production',
@@ -254,7 +286,7 @@ class ApiGwKeyLoaderSpec extends ObjectBehavior
             ->willReturn($jwksArray);
 
         $httpClient
-            ->request('GET', 'https://api.tech.ec.europa.eu/federation/oauth/token/.well-known/jwks.json')
+            ->sendRequest(Argument::type(RequestInterface::class))
             ->willReturn($response);
 
         $key = file_get_contents(__DIR__ . '/../../../../../src/Resources/keys/production/public.key');
@@ -264,7 +296,7 @@ class ApiGwKeyLoaderSpec extends ObjectBehavior
                 $key,
             ]);
 
-        $this->beConstructedWith($httpClient, $keyConverter, $projectDir, $configuration);
+        $this->beConstructedWith($httpClient, $requestFactory, $keyConverter, $projectDir, $configuration);
 
         $this
             ->getPublicKey()
@@ -275,8 +307,11 @@ class ApiGwKeyLoaderSpec extends ObjectBehavior
             ->shouldReturn($key);
     }
 
-    public function it_throws_an_exception_when_failsafe_key_is_empty(HttpClientInterface $httpClient, KeyConverterInterface $keyConverter)
-    {
+    public function it_throws_an_exception_when_failsafe_key_is_empty(
+        ClientInterface $httpClient,
+        RequestFactoryInterface $requestFactory,
+        KeyConverterInterface $keyConverter
+    ) {
         $publicKeyFilepath = '/../../../tests/src/Resources/keys/user/public.jwks.empty';
         $privateKeyFilepath = '/../../../tests/src/Resources/keys/user/private.jwks.json';
         $configuration = [
@@ -297,15 +332,18 @@ class ApiGwKeyLoaderSpec extends ObjectBehavior
 
         $projectDir = __DIR__;
 
-        $this->beConstructedWith($httpClient, $keyConverter, $projectDir, $configuration);
+        $this->beConstructedWith($httpClient, $requestFactory, $keyConverter, $projectDir, $configuration);
 
         $this
             ->shouldThrow(new ApiGwAuthenticationException('Invalid JWKS format of public key at /../../../tests/src/Resources/keys/user/public.jwks.empty, keys array is empty.'))
             ->during('loadKey', [KeyLoaderInterface::TYPE_PUBLIC]);
     }
 
-    public function it_throws_an_exception_when_failsafe_key_is_invalid(HttpClientInterface $httpClient, KeyConverterInterface $keyConverter)
-    {
+    public function it_throws_an_exception_when_failsafe_key_is_invalid(
+        ClientInterface $httpClient,
+        RequestFactoryInterface $requestFactory,
+        KeyConverterInterface $keyConverter
+    ) {
         $publicKeyFilepath = '/../../../tests/src/Resources/keys/user/public.jwks.invalid';
         $privateKeyFilepath = '/../../../tests/src/Resources/keys/user/private.jwks.json';
         $configuration = [
@@ -326,15 +364,18 @@ class ApiGwKeyLoaderSpec extends ObjectBehavior
 
         $projectDir = __DIR__;
 
-        $this->beConstructedWith($httpClient, $keyConverter, $projectDir, $configuration);
+        $this->beConstructedWith($httpClient, $requestFactory, $keyConverter, $projectDir, $configuration);
 
         $this
             ->shouldThrow(new ApiGwAuthenticationException('Invalid JWKS format of public key at /../../../tests/src/Resources/keys/user/public.jwks.invalid.'))
             ->during('loadKey', [KeyLoaderInterface::TYPE_PUBLIC]);
     }
 
-    public function let(HttpClientInterface $httpClient, KeyConverterInterface $keyConverter)
-    {
+    public function let(
+        ClientInterface $httpClient,
+        RequestFactoryInterface $requestFactory,
+        KeyConverterInterface $keyConverter
+    ) {
         $configuration = [
             'defaults' => [
                 'env' => 'user',
@@ -349,6 +390,6 @@ class ApiGwKeyLoaderSpec extends ObjectBehavior
 
         $projectDir = __DIR__;
 
-        $this->beConstructedWith($httpClient, $keyConverter, $projectDir, $configuration);
+        $this->beConstructedWith($httpClient, $requestFactory, $keyConverter, $projectDir, $configuration);
     }
 }

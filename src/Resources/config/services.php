@@ -14,6 +14,8 @@ use EcPhp\ApiGwAuthenticationBundle\Security\Core\User\ApiGwAuthenticationUserPr
 use EcPhp\ApiGwAuthenticationBundle\Service\KeyConverter\KeyConverter;
 use EcPhp\ApiGwAuthenticationBundle\Service\KeyConverter\KeyConverterInterface;
 use EcPhp\ApiGwAuthenticationBundle\Service\KeyLoader\ApiGwKeyLoader;
+use Psr\Http\Client\ClientInterface;
+use Psr\Http\Message\RequestFactoryInterface;
 use Symfony\Component\HttpClient\CachingHttpClient;
 
 return static function (ContainerConfigurator $container) {
@@ -44,6 +46,15 @@ return static function (ContainerConfigurator $container) {
             'api_gw_authentication.key_converter'
         );
 
+    // By doing this, we let users customize the HTTP client in use in this
+    // bundle.
+    $container
+        ->services()
+        ->alias(
+            'api_gw_authentication.http_client',
+            ClientInterface::class
+        );
+
     $container
         ->services()
         ->set('api_gw_authentication.api_gw_keyloader', ApiGwKeyLoader::class)
@@ -51,6 +62,7 @@ return static function (ContainerConfigurator $container) {
         ->arg('$configuration', '%api_gw_authentication%')
         ->arg('$projectDir', '%kernel.project_dir%')
         ->arg('$httpClient', service('api_gw_authentication.http_client'))
+        ->arg('$requestFactory', service(RequestFactoryInterface::class))
         ->autowire(true)
         ->autoconfigure(true);
 
