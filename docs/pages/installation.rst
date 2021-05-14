@@ -100,16 +100,16 @@ Edit your own `services.yaml` file as such:
 
 .. code-block:: yaml
 
-services
-    cachedHttpClient:
-        class: 'Symfony\Component\HttpClient\CachingHttpClient'
-        arguments:
-            $store: '@http_cache.store'
+    services
+        cachedHttpClient:
+            class: 'Symfony\Component\HttpClient\CachingHttpClient'
+            arguments:
+                $store: '@http_cache.store'
 
-    api_gw_authentication.http_client:
-        class: 'Symfony\Component\HttpClient\Psr18Client'
-        arguments:
-            $client: '@cachedHttpClient'
+        api_gw_authentication.http_client:
+            class: 'Symfony\Component\HttpClient\Psr18Client'
+            arguments:
+                $client: '@cachedHttpClient'
 
 .. _lexik/jwt-authentication-bundle: https://packagist.org/packages/lexik/jwt-authentication-bundle
 .. _a Symfony Flex recipe: https://github.com/symfony/recipes-contrib/blob/master/ecphp/api-gw-authentication-bundle/1.0/manifest.json
