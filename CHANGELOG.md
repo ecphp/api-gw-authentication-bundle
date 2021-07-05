@@ -5,10 +5,46 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.0.1](https://github.com/ecphp/api-gw-authentication-bundle/compare/1.0.0...1.0.1)
+## [1.0.2](https://github.com/ecphp/api-gw-authentication-bundle/compare/1.0.1...1.0.2)
+
+### Merged
+
+- Use PSR [`#7`](https://github.com/ecphp/api-gw-authentication-bundle/pull/7)
+- chore(deps-dev): Update infection/infection requirement from ^0.22.0 to ^0.23.0 [`#8`](https://github.com/ecphp/api-gw-authentication-bundle/pull/8)
+- chore(deps): Bump actions/cache from v2.1.4 to v2.1.5 [`#4`](https://github.com/ecphp/api-gw-authentication-bundle/pull/4)
 
 ### Commits
 
+- ci: Disable builds on macOS until further notice. [`eaba3bd`](https://github.com/ecphp/api-gw-authentication-bundle/commit/eaba3bdd5aa4bb86665da7b6d22269ed3afc9af2)
+- refactor: Autofix code style. [`c5780f4`](https://github.com/ecphp/api-gw-authentication-bundle/commit/c5780f4ce16edede75dc2420185ad3d85034ccc7)
+- chore: Update .gitattributes. [`cc53d41`](https://github.com/ecphp/api-gw-authentication-bundle/commit/cc53d41b5fc596ae9e389d64afc96c37589f3b3c)
+- docs: Update installation instructions. [`71f1ebe`](https://github.com/ecphp/api-gw-authentication-bundle/commit/71f1ebe79dd89c90f709d13ea3540a6b908ac380)
+- docs: Update installation instructions. [`4e85ee5`](https://github.com/ecphp/api-gw-authentication-bundle/commit/4e85ee59d1cc1c6d60b0bd7942b0f059f243b169)
+- feat: Let users override the HTTP client. [`125a6b1`](https://github.com/ecphp/api-gw-authentication-bundle/commit/125a6b17bb83b0b077239071319b0e5dde738e8d)
+- chore: Update composer.json. [`363366a`](https://github.com/ecphp/api-gw-authentication-bundle/commit/363366ac679f69437b02256c483f32a8281adeec)
+- chore: Add missing dependency. [`e187e55`](https://github.com/ecphp/api-gw-authentication-bundle/commit/e187e558ad96b31a6171f55508daf132bdea1051)
+- chore(deps-dev): Update infection/infection requirement [`76e8d1a`](https://github.com/ecphp/api-gw-authentication-bundle/commit/76e8d1a67bf54a37c9d3c91e71ceec17c2f0ceaf)
+- refactor: Autofix code style. [`dfd47ae`](https://github.com/ecphp/api-gw-authentication-bundle/commit/dfd47ae7202b92913394b46a81e9429ec8a18209)
+- chore: switch to ecphp/php-conventions. [`2984367`](https://github.com/ecphp/api-gw-authentication-bundle/commit/29843671d3a7eacbaa1059860f8d2a69bcc07537)
+- Add missing use statement. [`5cb9b4e`](https://github.com/ecphp/api-gw-authentication-bundle/commit/5cb9b4eaf5431449d0742d14cf7679644d5c3d93)
+- Restore erroneous commits. [`6b195d2`](https://github.com/ecphp/api-gw-authentication-bundle/commit/6b195d265f4ada323db55177fdb9a56dc3a80aad)
+- refactor: Autofix code style. [`043c10c`](https://github.com/ecphp/api-gw-authentication-bundle/commit/043c10cd7525614a30202225fb6bdc0724ecd9d9)
+- chore: Update composer.json. [`66c18ac`](https://github.com/ecphp/api-gw-authentication-bundle/commit/66c18ac06f6dbff525f1f8a97fc37ebeea490f57)
+- docs: Add a small note. [`047306d`](https://github.com/ecphp/api-gw-authentication-bundle/commit/047306d46421859dfbafd42530690d66dbe622dc)
+- tests: Update tests. [`6e1043c`](https://github.com/ecphp/api-gw-authentication-bundle/commit/6e1043c4ab3f1a14eae3f4ee2a6d11f725a3c286)
+- refactor: Autofix code style. [`71f81c8`](https://github.com/ecphp/api-gw-authentication-bundle/commit/71f81c8ee40336e8d55d354190368517d14f9018)
+- Use PSR-7 and PSR-17 classes. [`4dba864`](https://github.com/ecphp/api-gw-authentication-bundle/commit/4dba864dc1964ee251ae56f8c425bdd15de51d57)
+- chore: Update LICENSE. [`f6e62fb`](https://github.com/ecphp/api-gw-authentication-bundle/commit/f6e62fbed435185699264eebbb64b96b7bb25bb3)
+- chore: Update static files. [`ec00fed`](https://github.com/ecphp/api-gw-authentication-bundle/commit/ec00fed4dcee5ba5946ba4f2f0516ebc808c47c3)
+- chore: Update composer.json [`9abea15`](https://github.com/ecphp/api-gw-authentication-bundle/commit/9abea1551fe75b1ba0559ce33c3d463aae146b9d)
+- chore: Update Docker stack. [`d67e44c`](https://github.com/ecphp/api-gw-authentication-bundle/commit/d67e44cadd7ada3a8abf6720467f61a2ec0afe5f)
+- docs: Update README. [`88c3f37`](https://github.com/ecphp/api-gw-authentication-bundle/commit/88c3f374dd4a0ce9aaec6fee663c643894254351)
+
+## [1.0.1](https://github.com/ecphp/api-gw-authentication-bundle/compare/1.0.0...1.0.1) - 2021-02-12
+
+### Commits
+
+- docs: Update Changelog. [`2bfdc3b`](https://github.com/ecphp/api-gw-authentication-bundle/commit/2bfdc3bf8b6023c651261962b66c60c4603f4f53)
 - refactor: Remove default configuration files - moved them to the Symfony recipe. [`09a1d62`](https://github.com/ecphp/api-gw-authentication-bundle/commit/09a1d622af4bbc9d360b83a38939c54edddcb3a5)
 
 ## 1.0.0 - 2021-02-11
