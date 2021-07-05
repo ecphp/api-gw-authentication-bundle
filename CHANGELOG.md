@@ -5,7 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.0.2](https://github.com/ecphp/api-gw-authentication-bundle/compare/1.0.1...1.0.2)
+## [1.0.3](https://github.com/ecphp/api-gw-authentication-bundle/compare/1.0.2...1.0.3)
+
+### Commits
+
+- ci: Add automatic changelog parsing when releasing. [`3a7b0a5`](https://github.com/ecphp/api-gw-authentication-bundle/commit/3a7b0a5488ac28a5016e96b90ed3ff9d9c3bea80)
+
+## [1.0.2](https://github.com/ecphp/api-gw-authentication-bundle/compare/1.0.1...1.0.2) - 2021-07-05
 
 ### Merged
 
@@ -15,6 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Commits
 
+- docs: Add/update CHANGELOG. [`8fb1409`](https://github.com/ecphp/api-gw-authentication-bundle/commit/8fb140999345772b98a552d9ee687968eb03824a)
 - ci: Disable builds on macOS until further notice. [`eaba3bd`](https://github.com/ecphp/api-gw-authentication-bundle/commit/eaba3bdd5aa4bb86665da7b6d22269ed3afc9af2)
 - refactor: Autofix code style. [`c5780f4`](https://github.com/ecphp/api-gw-authentication-bundle/commit/c5780f4ce16edede75dc2420185ad3d85034ccc7)
 - chore: Update .gitattributes. [`cc53d41`](https://github.com/ecphp/api-gw-authentication-bundle/commit/cc53d41b5fc596ae9e389d64afc96c37589f3b3c)
