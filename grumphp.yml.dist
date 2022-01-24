@@ -4,7 +4,6 @@ imports:
 parameters:
   tasks.phpstan.configuration: phpstan.neon
   tasks.license.date_from: 2020
-  tasks.license.holder: ECPHP
   tasks.license.name: BSD-3-Clause
   extra_tasks:
     phpspec:
